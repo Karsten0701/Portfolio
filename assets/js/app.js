@@ -47,38 +47,21 @@ function contactForm() {
         status: null,
         statusMessage: '',
 
-        async submit() {
+        submit() {
             this.sending = true;
             this.status = null;
 
-            try {
-                const formData = new FormData();
-                formData.append('name', this.form.name);
-                formData.append('email', this.form.email);
-                formData.append('message', this.form.message);
+            const subject = 'Portfolio contact van ' + encodeURIComponent(this.form.name);
+            const body = 'Naam: ' + this.form.name + '\nEmail: ' + this.form.email + '\n\n' + this.form.message;
+            const mailto = 'mailto:Karstenlindenburg@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(body);
 
-                const response = await fetch('api/contact.php', {
-                    method: 'POST',
-                    body: formData
-                });
+            window.location.href = mailto;
 
-                const data = await response.json();
-
-                if (data.success) {
-                    this.status = 'success';
-                    this.statusMessage = data.message;
-                    this.form = { name: '', email: '', message: '' };
-                } else {
-                    this.status = 'error';
-                    this.statusMessage = data.message;
-                }
-            } catch {
-                this.status = 'error';
-                this.statusMessage = 'Er ging iets mis. Probeer het later opnieuw.';
-            } finally {
-                this.sending = false;
-                setTimeout(() => { this.status = null; }, 5000);
-            }
+            this.status = 'success';
+            this.statusMessage = 'Je e-mailclient wordt geopend. Verstuur het bericht om contact op te nemen.';
+            this.form = { name: '', email: '', message: '' };
+            this.sending = false;
+            setTimeout(() => { this.status = null; }, 6000);
         }
     };
 }
