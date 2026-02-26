@@ -37,7 +37,7 @@ $config = [
             'badge'       => 'Roblox',
             'badge_type'  => 'primary',
             'color'       => '#e74c3c',
-            'stats'       => '800k+ bezoeken',
+            'stats'       => '900k+ bezoeken',
             'featured'    => true,
             'link'        => null,
         ],
@@ -92,3 +92,4 @@ $config = [
         ['name' => 'Luau',        'desc' => 'Roblox scripting',      'icon' => 'bi-code-slash',     'color' => '#00a2ff'],
     ],
 ];
+
