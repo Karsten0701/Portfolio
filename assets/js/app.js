@@ -1,11 +1,21 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.store('theme', {
+        dark: localStorage.getItem('theme') !== 'light',
+
+        toggle() {
+            this.dark = !this.dark;
+            document.documentElement.setAttribute('data-theme', this.dark ? 'dark' : 'light');
+            localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+        }
+    });
+});
+
 function portfolio() {
     return {
         scrolled: false,
         loaded: false,
-        darkMode: true,
 
         init() {
-            this.initTheme();
             this.loaded = true;
 
             window.addEventListener('scroll', () => {
@@ -13,21 +23,6 @@ function portfolio() {
             });
 
             this.smoothScroll();
-        },
-
-        initTheme() {
-            const saved = localStorage.getItem('theme');
-            if (saved) {
-                this.darkMode = saved === 'dark';
-            }
-            document.documentElement.setAttribute('data-theme', this.darkMode ? 'dark' : 'light');
-        },
-
-        toggleTheme() {
-            this.darkMode = !this.darkMode;
-            const theme = this.darkMode ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
         },
 
         smoothScroll() {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karsten Lindenburg — Portfolio</title>
+    <title>Karsten Lindenburg Portfolio</title>
     <meta name="description" content="Creative Software Development Portfolio van Karsten Lindenburg">
     <meta name="author" content="Karsten Lindenburg">
 
@@ -16,7 +16,7 @@
     <script>
         (function() {
             var t = localStorage.getItem('theme');
-            if (t) document.documentElement.setAttribute('data-theme', t);
+            document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
         })();
     </script>
 </head>
@@ -36,8 +36,8 @@
                 <a href="https://github.com/Karsten0701" target="_blank" class="nav-icon-btn" title="GitHub">
                     <i class="bi bi-github"></i>
                 </a>
-                <button class="nav-icon-btn" @click="toggleTheme()" :title="darkMode ? 'Light mode' : 'Dark mode'">
-                    <i class="bi" :class="darkMode ? 'bi-sun' : 'bi-moon-fill'"></i>
+                <button class="nav-icon-btn" @click="$store.theme.toggle()" :title="$store.theme.dark ? 'Light mode' : 'Dark mode'">
+                    <i class="bi" :class="$store.theme.dark ? 'bi-sun' : 'bi-moon-fill'"></i>
                 </button>
                 <button class="navbar-toggler border-0" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -56,7 +56,7 @@
         </div>
     </nav>
 
-    <header class="hero-section d-flex align-items-center">
+    <header class="hero-section d-flex align-items-center pattern-dots">
         <div class="container text-center">
             <div x-show="loaded" x-transition:enter="transition-fade" class="hero-content">
                 <span class="hero-tag mb-3">// creative developer</span>
@@ -120,7 +120,7 @@
             </div>
         </section>
 
-        <section id="projects" class="py-5 my-5 position-relative" style="z-index: 1">
+        <section id="projects" class="py-5 my-5 position-relative pattern-grid" style="z-index: 1">
             <div class="container">
                 <h2 class="section-title fw-bold mb-2">Projecten</h2>
                 <div class="divider mb-2"></div>
