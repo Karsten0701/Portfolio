@@ -23,11 +23,7 @@
 <body x-data="portfolio()" x-init="init()">
 
     <div class="bg-grid" aria-hidden="true"></div>
-    <div class="bg-orbs" aria-hidden="true">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
+    <div class="bg-orbs" aria-hidden="true"></div>
 
     <nav class="navbar navbar-expand-lg fixed-top" :class="{ 'navbar-scrolled': scrolled }">
         <div class="container">
@@ -103,7 +99,7 @@
                     <div class="col-lg-4 offset-lg-1 mt-5 mt-lg-0">
                         <div class="d-flex flex-column gap-3 about-stats-row">
                             <div class="about-stat">
-                                <div class="stat-number">800k+</div>
+                                <div class="stat-number">900k+</div>
                                 <div class="stat-label">Game Bezoeken</div>
                             </div>
                             <div class="about-stat">
@@ -136,7 +132,7 @@
                             <p class="text-muted small mb-3 flex-grow-1">Een populaire Roblox game waar spelers hun eigen themapark kunnen bouwen en beheren. Gebouwd met Luau scripting en custom UI systemen.</p>
                             <div class="border-top pt-3 mt-auto">
                                 <span class="small fw-semibold" style="color: #e74c3c">
-                                    <i class="bi bi-graph-up me-1"></i>800k+ bezoeken
+                                    <i class="bi bi-graph-up me-1"></i>900k+ bezoeken
                                 </span>
                             </div>
                         </div>
@@ -294,7 +290,7 @@
 
                             <button type="submit" class="btn btn-accent px-4" :disabled="sending">
                                 <span x-show="!sending"><i class="bi bi-send me-2"></i>Verstuur</span>
-                                <span x-show="sending" class="d-flex align-items-center gap-2">
+                                <span x-show="sending" x-cloak class="d-flex align-items-center gap-2">
                                     <span class="spinner-border spinner-border-sm"></span> Verzenden...
                                 </span>
                             </button>

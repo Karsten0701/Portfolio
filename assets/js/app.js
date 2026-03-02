@@ -69,11 +69,13 @@ function contactForm() {
 
             window.location.href = mailto;
 
-            this.status = 'success';
-            this.statusMessage = 'Je e-mailclient wordt geopend. Verstuur het bericht om contact op te nemen.';
-            this.form = { name: '', email: '', message: '' };
-            this.sending = false;
-            setTimeout(() => { this.status = null; }, 6000);
+            setTimeout(() => {
+                this.status = 'success';
+                this.statusMessage = 'Je e-mailclient wordt geopend. Verstuur het bericht om contact op te nemen.';
+                this.form = { name: '', email: '', message: '' };
+                this.sending = false;
+                setTimeout(() => { this.status = null; }, 5000);
+            }, 600);
         }
     };
 }
