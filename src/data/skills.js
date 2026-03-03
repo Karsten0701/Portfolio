@@ -1,8 +1,10 @@
 export const skills = [
-  { name: 'HTML', description: 'Semantische markup', color: '#e44d26', icon: 'filetype-html' },
-  { name: 'CSS', description: 'Styling & layout', color: '#264de4', icon: 'filetype-css' },
-  { name: 'JavaScript', description: 'Interactiviteit', color: '#f0db4f', icon: 'filetype-js' },
-  { name: 'PHP', description: 'Backend development', color: '#777bb4', icon: 'filetype-php' },
-  { name: 'Python', description: 'AI & scripting', color: '#3776ab', icon: 'filetype-py' },
-  { name: 'Luau', description: 'Roblox scripting', color: '#00a2ff', icon: 'code-slash' },
+  { name: 'HTML', color: '#e44d26', category: 'Frontend' },
+  { name: 'CSS', color: '#264de4', category: 'Frontend' },
+  { name: 'JavaScript', color: '#f0db4f', category: 'Frontend' },
+  { name: 'PHP', color: '#777bb4', category: 'Backend' },
+  { name: 'Python', color: '#3776ab', category: 'Backend' },
+  { name: 'Luau', color: '#00a2ff', category: 'Game Dev' },
 ]
+
+export const tools = ['Git', 'VS Code', 'Tailwind CSS', 'Vite', 'Roblox Studio']

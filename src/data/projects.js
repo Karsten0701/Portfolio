@@ -7,6 +7,8 @@ export const projects = [
     badgeColor: '#e74c3c',
     stat: '900k+ bezoeken',
     github: null,
+    featured: true,
+    tech: ['Luau', 'Roblox Studio'],
   },
   {
     title: 'MantelZicht',
@@ -16,6 +18,7 @@ export const projects = [
     badgeColor: '#777bb4',
     stat: null,
     github: 'https://github.com/Karsten0701/MantelZicht',
+    tech: ['PHP', 'HTML', 'CSS'],
   },
   {
     title: 'Project Rotschield',
@@ -25,6 +28,7 @@ export const projects = [
     badgeColor: '#3776ab',
     stat: null,
     github: 'https://github.com/Karsten0701/Project-Rotschield',
+    tech: ['Python'],
   },
   {
     title: 'Horror Game',
@@ -34,6 +38,7 @@ export const projects = [
     badgeColor: null,
     stat: null,
     github: 'https://github.com/Karsten0701/Horror',
+    tech: ['Luau', 'Roblox Studio'],
   },
   {
     title: 'Clash Of Vikings',
@@ -43,5 +48,6 @@ export const projects = [
     badgeColor: null,
     stat: null,
     github: null,
+    tech: ['Luau', 'Roblox Studio'],
   },
 ]

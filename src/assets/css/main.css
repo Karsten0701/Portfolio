@@ -2,42 +2,43 @@
 
 @theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --color-accent: #f5c518;
-  --color-accent-hover: #dba800;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-accent: #f59e0b;
+  --color-accent-hover: #d97706;
 }
 
 :root,
-[data-theme="dark"] {
-  --c-bg: #08080d;
-  --c-bg-alt: #0d0d15;
-  --c-bg-surface: #131320;
-  --c-bg-card: rgba(18, 18, 30, 0.6);
-  --c-border: rgba(255, 255, 255, 0.07);
-  --c-border-hover: rgba(255, 255, 255, 0.16);
-  --c-text: #e4e4eb;
-  --c-text-secondary: #9898a8;
-  --c-text-muted: #5c5c6e;
-  --c-nav-bg: rgba(8, 8, 13, 0.85);
-  color-scheme: dark;
+[data-theme="light"] {
+  --c-bg: #fafaf9;
+  --c-bg-alt: #f5f5f4;
+  --c-bg-surface: #ffffff;
+  --c-bg-card: #ffffff;
+  --c-border: rgba(0, 0, 0, 0.08);
+  --c-border-hover: rgba(0, 0, 0, 0.16);
+  --c-text: #1c1917;
+  --c-text-secondary: #57534e;
+  --c-text-muted: #a8a29e;
+  --c-nav-bg: rgba(250, 250, 249, 0.92);
+  color-scheme: light;
 }
 
-[data-theme="light"] {
-  --c-bg: #f6f6f3;
-  --c-bg-alt: #eeeee9;
-  --c-bg-surface: #ffffff;
-  --c-bg-card: rgba(255, 255, 255, 0.7);
-  --c-border: rgba(0, 0, 0, 0.07);
-  --c-border-hover: rgba(0, 0, 0, 0.16);
-  --c-text: #18181d;
-  --c-text-secondary: #52525c;
-  --c-text-muted: #8a8a96;
-  --c-nav-bg: rgba(246, 246, 243, 0.88);
-  color-scheme: light;
+[data-theme="dark"] {
+  --c-bg: #0c0c0e;
+  --c-bg-alt: #121214;
+  --c-bg-surface: #1a1a1e;
+  --c-bg-card: #1e1e22;
+  --c-border: rgba(255, 255, 255, 0.08);
+  --c-border-hover: rgba(255, 255, 255, 0.16);
+  --c-text: #f4f4f5;
+  --c-text-secondary: #a1a1aa;
+  --c-text-muted: #63636e;
+  --c-nav-bg: rgba(12, 12, 14, 0.92);
+  color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 72px;
 }
 
 body {
@@ -51,25 +52,12 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: #08080d;
-}
-
-.bg-grid {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--c-border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+  color: #1c1917;
 }
 
 .fade-in {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(12px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 .fade-in.visible {
