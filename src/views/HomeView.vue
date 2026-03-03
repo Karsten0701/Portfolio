@@ -9,9 +9,10 @@ import FooterSection from '../components/FooterSection.vue'
 </script>
 
 <template>
+  <div class="bg-grid" aria-hidden="true" />
   <NavBar />
   <HeroSection />
-  <main>
+  <main class="relative z-[1]">
     <AboutSection />
     <ProjectsSection />
     <SkillsSection />

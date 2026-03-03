@@ -20,10 +20,7 @@ import { contactItems } from '../data/contact'
           :href="item.href"
           :target="item.external ? '_blank' : undefined"
           :rel="item.external ? 'noopener' : undefined"
-          class="text-sm font-medium t"
-          style="color: var(--c-text); text-decoration: none"
-          @mouseenter="$event.target.style.color = 'var(--c-text-secondary)'"
-          @mouseleave="$event.target.style.color = 'var(--c-text)'"
+          class="contact-link text-sm font-medium"
         >
           {{ item.value }}
         </a>

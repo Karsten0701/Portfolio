@@ -11,11 +11,8 @@ const { el, isVisible } = useIntersection()
 <template>
   <div
     ref="el"
-    class="fade-in rounded-xl p-6 text-center border t"
+    class="fade-in card-hover rounded-xl p-6 text-center"
     :class="{ visible: isVisible }"
-    style="background: var(--c-bg-card); border-color: var(--c-border)"
-    @mouseenter="$event.currentTarget.style.borderColor = 'var(--c-border-hover)'"
-    @mouseleave="$event.currentTarget.style.borderColor = 'var(--c-border)'"
   >
     <div
       class="w-13 h-13 rounded-xl inline-flex items-center justify-center mb-3 text-2xl"

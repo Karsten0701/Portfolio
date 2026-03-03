@@ -1,4 +1,4 @@
-name: build & deploy
+name: Build & Deploy
 
 on:
   workflow_dispatch:
@@ -13,14 +13,22 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: install & build
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install & Build
         run: |
           npm ci
           npm run build
           cp dist/index.html dist/404.html
-      - name: deploy
+
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist

@@ -27,26 +27,10 @@ const { el, isVisible } = useIntersection()
             ervaringen die mensen verbinden en vermaken.
           </p>
           <div class="flex gap-3 flex-wrap">
-            <a
-              href="https://github.com/Karsten0701"
-              target="_blank"
-              rel="noopener"
-              class="px-4 py-2 rounded-xl text-xs font-semibold t"
-              style="background: var(--color-accent); color: #08080d; text-decoration: none"
-              @mouseenter="$event.target.style.background = 'var(--color-accent-hover)'"
-              @mouseleave="$event.target.style.background = 'var(--color-accent)'"
-            >
+            <a href="https://github.com/Karsten0701" target="_blank" rel="noopener" class="btn-primary-sm">
               Personal GitHub
             </a>
-            <a
-              href="https://github.com/Karsten07011"
-              target="_blank"
-              rel="noopener"
-              class="px-4 py-2 rounded-xl text-xs font-medium border t"
-              style="border-color: var(--c-border); color: var(--c-text); text-decoration: none"
-              @mouseenter="$event.target.style.borderColor = 'var(--color-accent)'; $event.target.style.color = 'var(--color-accent)'"
-              @mouseleave="$event.target.style.borderColor = 'var(--c-border)'; $event.target.style.color = 'var(--c-text)'"
-            >
+            <a href="https://github.com/Karsten07011" target="_blank" rel="noopener" class="btn-outline-sm">
               School GitHub
             </a>
           </div>
@@ -57,10 +41,7 @@ const { el, isVisible } = useIntersection()
             <div
               v-for="stat in stats"
               :key="stat.label"
-              class="rounded-xl p-5 text-center border t"
-              style="background: var(--c-bg-card); border-color: var(--c-border)"
-              @mouseenter="$event.currentTarget.style.borderColor = 'var(--c-border-hover)'"
-              @mouseleave="$event.currentTarget.style.borderColor = 'var(--c-border)'"
+              class="card-hover rounded-xl p-5 text-center"
             >
               <div class="text-2xl font-bold leading-none" style="color: var(--c-text)">{{ stat.number }}</div>
               <div class="text-xs mt-1.5" style="color: var(--c-text-muted)">{{ stat.label }}</div>

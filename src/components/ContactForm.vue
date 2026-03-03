@@ -13,14 +13,8 @@ const { form, errors, sending, status, statusMessage, submit } = useContactForm(
         v-model="form.name"
         type="text"
         placeholder="Je naam"
-        class="w-full rounded-xl px-4 py-3 text-sm border t outline-none"
-        :style="{
-          background: 'var(--c-bg-surface)',
-          borderColor: errors.name ? '#ef4444' : 'var(--c-border)',
-          color: 'var(--c-text)',
-        }"
-        @focus="$event.target.style.borderColor = errors.name ? '#ef4444' : 'var(--color-accent)'"
-        @blur="$event.target.style.borderColor = errors.name ? '#ef4444' : 'var(--c-border)'"
+        class="form-input"
+        :class="{ 'is-error': errors.name }"
         required
         aria-required="true"
       >
@@ -34,14 +28,8 @@ const { form, errors, sending, status, statusMessage, submit } = useContactForm(
         v-model="form.email"
         type="email"
         placeholder="je@email.com"
-        class="w-full rounded-xl px-4 py-3 text-sm border t outline-none"
-        :style="{
-          background: 'var(--c-bg-surface)',
-          borderColor: errors.email ? '#ef4444' : 'var(--c-border)',
-          color: 'var(--c-text)',
-        }"
-        @focus="$event.target.style.borderColor = errors.email ? '#ef4444' : 'var(--color-accent)'"
-        @blur="$event.target.style.borderColor = errors.email ? '#ef4444' : 'var(--c-border)'"
+        class="form-input"
+        :class="{ 'is-error': errors.email }"
         required
         aria-required="true"
       >
@@ -55,28 +43,15 @@ const { form, errors, sending, status, statusMessage, submit } = useContactForm(
         v-model="form.message"
         rows="4"
         placeholder="Waar kan ik je mee helpen?"
-        class="w-full rounded-xl px-4 py-3 text-sm border t outline-none resize-y"
-        :style="{
-          background: 'var(--c-bg-surface)',
-          borderColor: errors.message ? '#ef4444' : 'var(--c-border)',
-          color: 'var(--c-text)',
-        }"
-        @focus="$event.target.style.borderColor = errors.message ? '#ef4444' : 'var(--color-accent)'"
-        @blur="$event.target.style.borderColor = errors.message ? '#ef4444' : 'var(--c-border)'"
+        class="form-input resize-y"
+        :class="{ 'is-error': errors.message }"
         required
         aria-required="true"
       />
       <p v-if="errors.message" class="text-xs mt-1 text-red-500">{{ errors.message }}</p>
     </div>
 
-    <button
-      type="submit"
-      :disabled="sending"
-      class="px-5 py-3 rounded-xl text-sm font-semibold t cursor-pointer disabled:opacity-60"
-      style="background: var(--color-accent); border: 2px solid var(--color-accent); color: #08080d"
-      @mouseenter="!sending && ($event.target.style.background = 'var(--color-accent-hover)', $event.target.style.borderColor = 'var(--color-accent-hover)')"
-      @mouseleave="$event.target.style.background = 'var(--color-accent)'; $event.target.style.borderColor = 'var(--color-accent)'"
-    >
+    <button type="submit" :disabled="sending" class="btn-primary">
       <span v-if="!sending">Verstuur</span>
       <span v-else class="flex items-center gap-2">
         <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">

@@ -6,7 +6,6 @@
   --color-accent-hover: #dba800;
 }
 
-/* Dark theme (default) */
 :root,
 [data-theme="dark"] {
   --c-bg: #08080d;
@@ -36,7 +35,6 @@
   color-scheme: light;
 }
 
-/* Base resets */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -56,12 +54,21 @@ body {
   color: #08080d;
 }
 
-/* Shared transition for every interactive element */
-.t {
-  transition: all 0.3s ease-in-out;
+/* Background grid */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--c-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
 }
 
-/* Fade-in for intersection observer */
+/* Fade-in animation on scroll */
 .fade-in {
   opacity: 0;
   transform: translateY(16px);
@@ -71,4 +78,194 @@ body {
 .fade-in.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/*
+  Hover classes — every interactive element uses these.
+  All share the exact same 0.3s ease transition.
+*/
+
+/* Cards: border lights up on hover */
+.card-hover {
+  border: 1px solid var(--c-border);
+  background: var(--c-bg-card);
+  transition: border-color 0.3s ease;
+}
+.card-hover:hover {
+  border-color: var(--c-border-hover);
+}
+
+/* Icon buttons in nav/footer */
+.icon-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.icon-btn:hover {
+  border-color: var(--c-border-hover);
+  color: var(--c-text);
+}
+
+/* Footer icon buttons (slightly larger) */
+.icon-btn-lg {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.icon-btn-lg:hover {
+  border-color: var(--c-border-hover);
+  color: var(--c-text);
+}
+
+/* Primary button (accent background) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  color: #08080d;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Ghost/outline button */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: 2px solid var(--c-border);
+  color: var(--c-text);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.btn-outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Small button variants */
+.btn-primary-sm {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-accent);
+  color: #08080d;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+.btn-primary-sm:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-outline-sm {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-text);
+  text-decoration: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.btn-outline-sm:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Text links that lighten on hover */
+.link-hover {
+  color: var(--c-text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.link-hover:hover {
+  color: var(--c-text);
+}
+
+/* Nav links */
+.nav-link {
+  color: var(--c-text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-link:hover {
+  color: var(--c-text);
+}
+
+/* Contact links: text -> muted on hover */
+.contact-link {
+  color: var(--c-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.contact-link:hover {
+  color: var(--c-text-secondary);
+}
+
+/* Form inputs */
+.form-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border: 1.5px solid var(--c-border);
+  background: var(--c-bg-surface);
+  color: var(--c-text);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.form-input::placeholder {
+  color: var(--c-text-muted);
+}
+.form-input:focus {
+  border-color: var(--color-accent);
+}
+.form-input.is-error {
+  border-color: #ef4444;
+}
+.form-input.is-error:focus {
+  border-color: #ef4444;
 }

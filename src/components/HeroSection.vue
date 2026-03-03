@@ -7,7 +7,7 @@ function scrollTo(id) {
 
 <template>
   <header
-    class="min-h-[92vh] flex items-center justify-center pt-28 pb-20 border-b"
+    class="relative z-[1] min-h-[92vh] flex items-center justify-center pt-28 pb-20 border-b"
     style="border-color: var(--c-border)"
   >
     <div class="text-center px-6 max-w-2xl mx-auto">
@@ -23,24 +23,8 @@ function scrollTo(id) {
       <p class="text-lg mb-1" style="color: var(--c-text-secondary)">Creative Software Development</p>
       <p class="text-sm mb-8" style="color: var(--c-text-muted)">Grafisch Lyceum Rotterdam</p>
       <div class="flex justify-center gap-3 flex-wrap">
-        <button
-          class="px-5 py-3 rounded-xl text-sm font-semibold t cursor-pointer"
-          style="background: var(--color-accent); border: 2px solid var(--color-accent); color: #08080d"
-          @mouseenter="$event.target.style.background = 'var(--color-accent-hover)'; $event.target.style.borderColor = 'var(--color-accent-hover)'"
-          @mouseleave="$event.target.style.background = 'var(--color-accent)'; $event.target.style.borderColor = 'var(--color-accent)'"
-          @click="scrollTo('#projects')"
-        >
-          Projecten
-        </button>
-        <button
-          class="px-5 py-3 rounded-xl text-sm font-medium border-2 t cursor-pointer"
-          style="border-color: var(--c-border); color: var(--c-text); background: transparent"
-          @mouseenter="$event.target.style.borderColor = 'var(--color-accent)'; $event.target.style.color = 'var(--color-accent)'"
-          @mouseleave="$event.target.style.borderColor = 'var(--c-border)'; $event.target.style.color = 'var(--c-text)'"
-          @click="scrollTo('#contact')"
-        >
-          Contact
-        </button>
+        <button class="btn-primary" @click="scrollTo('#projects')">Projecten</button>
+        <button class="btn-outline" @click="scrollTo('#contact')">Contact</button>
       </div>
     </div>
   </header>

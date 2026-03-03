@@ -11,11 +11,8 @@ const { el, isVisible } = useIntersection()
 <template>
   <div
     ref="el"
-    class="fade-in rounded-2xl p-7 flex flex-col h-full border t"
+    class="fade-in card-hover rounded-2xl p-7 flex flex-col h-full"
     :class="{ visible: isVisible }"
-    style="background: var(--c-bg-card); border-color: var(--c-border)"
-    @mouseenter="$event.currentTarget.style.borderColor = 'var(--c-border-hover)'"
-    @mouseleave="$event.currentTarget.style.borderColor = 'var(--c-border)'"
   >
     <div class="flex justify-between items-start mb-3">
       <h3 class="text-lg font-semibold" style="color: var(--c-text)">{{ project.title }}</h3>
@@ -43,10 +40,7 @@ const { el, isVisible } = useIntersection()
         :href="project.github"
         target="_blank"
         rel="noopener"
-        class="text-sm font-medium inline-flex items-center gap-1 t"
-        style="color: var(--c-text-secondary); text-decoration: none"
-        @mouseenter="$event.currentTarget.style.color = 'var(--c-text)'"
-        @mouseleave="$event.currentTarget.style.color = 'var(--c-text-secondary)'"
+        class="link-hover text-sm font-medium inline-flex items-center gap-1"
       >
         Bekijk op GitHub &rarr;
       </a>
