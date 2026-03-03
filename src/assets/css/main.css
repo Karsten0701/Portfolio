@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-accent: #f5c518;
+  --color-accent-hover: #dba800;
+}
+
+/* Dark theme (default) */
+:root,
+[data-theme="dark"] {
+  --c-bg: #08080d;
+  --c-bg-alt: #0d0d15;
+  --c-bg-surface: #131320;
+  --c-bg-card: rgba(18, 18, 30, 0.6);
+  --c-border: rgba(255, 255, 255, 0.07);
+  --c-border-hover: rgba(255, 255, 255, 0.16);
+  --c-text: #e4e4eb;
+  --c-text-secondary: #9898a8;
+  --c-text-muted: #5c5c6e;
+  --c-nav-bg: rgba(8, 8, 13, 0.85);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --c-bg: #f6f6f3;
+  --c-bg-alt: #eeeee9;
+  --c-bg-surface: #ffffff;
+  --c-bg-card: rgba(255, 255, 255, 0.7);
+  --c-border: rgba(0, 0, 0, 0.07);
+  --c-border-hover: rgba(0, 0, 0, 0.16);
+  --c-text: #18181d;
+  --c-text-secondary: #52525c;
+  --c-text-muted: #8a8a96;
+  --c-nav-bg: rgba(246, 246, 243, 0.88);
+  color-scheme: light;
+}
+
+/* Base resets */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--c-text);
+  background: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #08080d;
+}
+
+/* Shared transition for every interactive element */
+.t {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Fade-in for intersection observer */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
