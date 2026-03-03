@@ -4,9 +4,6 @@
     --accent: #f5c518;
     --accent-hover: #dba800;
     --accent-rgb: 245, 197, 24;
-    --accent-soft: rgba(245, 197, 24, 0.08);
-    --accent-glow: rgba(245, 197, 24, 0.15);
-
     --bg: #08080d;
     --bg-alt: #0d0d15;
     --bg-surface: #131320;
@@ -15,7 +12,6 @@
 
     --border: rgba(255, 255, 255, 0.07);
     --border-hover: rgba(255, 255, 255, 0.14);
-    --border-accent: rgba(245, 197, 24, 0.22);
 
     --text: #e4e4eb;
     --text-secondary: #9898a8;
@@ -36,9 +32,6 @@
     --accent: #b8960f;
     --accent-hover: #9a7d0d;
     --accent-rgb: 184, 150, 15;
-    --accent-soft: rgba(184, 150, 15, 0.06);
-    --accent-glow: rgba(184, 150, 15, 0.1);
-
     --bg: #f6f6f3;
     --bg-alt: #eeeee9;
     --bg-surface: #ffffff;
@@ -47,7 +40,6 @@
 
     --border: rgba(0, 0, 0, 0.07);
     --border-hover: rgba(0, 0, 0, 0.14);
-    --border-accent: rgba(184, 150, 15, 0.22);
 
     --text: #18181d;
     --text-secondary: #52525c;
@@ -100,57 +92,7 @@ body {
 }
 
 .bg-orbs {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(600px circle at 84% 8%, rgba(var(--accent-rgb), 0.12), transparent 70%),
-        radial-gradient(450px circle at 10% 88%, rgba(120, 70, 220, 0.06), transparent 70%),
-        radial-gradient(380px circle at 38% 50%, rgba(var(--accent-rgb), 0.05), transparent 70%);
-}
-
-/* Section-specific patterns */
-.pattern-dots {
-    position: relative;
-}
-
-.pattern-dots::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle, var(--border-accent) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.pattern-dots > * {
-    position: relative;
-    z-index: 1;
-}
-
-.pattern-grid {
-    position: relative;
-}
-
-.pattern-grid::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(var(--border-accent) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border-accent) 1px, transparent 1px);
-    background-size: 52px 52px;
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.pattern-grid > * {
-    position: relative;
-    z-index: 1;
+    display: none;
 }
 
 /* ================================================
@@ -203,8 +145,8 @@ body {
     bottom: 2px;
     left: 50%;
     width: 0;
-    height: 2px;
-    background: var(--accent);
+    height: 1px;
+    background: var(--text);
     transform: translateX(-50%);
     border-radius: 1px;
     transition: width var(--transition);
@@ -232,9 +174,8 @@ body {
 }
 
 .nav-icon-btn:hover {
-    border-color: var(--border-accent);
-    color: var(--accent);
-    background: var(--accent-soft);
+    border-color: var(--border-hover);
+    color: var(--text);
 }
 
 .nav-toggle-icon {
@@ -263,7 +204,7 @@ body {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    border-bottom: 1px solid var(--border-accent);
+    border-bottom: 1px solid var(--border);
 }
 
 .hero-content {
@@ -274,9 +215,9 @@ body {
 .hero-tag {
     display: inline-block;
     padding: 8px 22px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    border: 1px solid var(--border-accent);
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
     border-radius: 50px;
     font-size: 0.82rem;
     font-weight: 600;
@@ -313,7 +254,7 @@ body {
     font-size: 0.88rem;
     font-weight: 600;
     padding: 0.65rem 1.5rem;
-    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    transition: background var(--transition), border-color var(--transition);
 }
 
 .btn-accent:hover,
@@ -321,11 +262,6 @@ body {
     background: var(--accent-hover);
     border-color: var(--accent-hover);
     color: #08080d;
-    transform: translateY(-1px);
-}
-
-.btn-accent:active {
-    transform: translateY(0);
 }
 
 .btn-outline-accent {
@@ -343,8 +279,7 @@ body {
 .btn-outline-accent:focus {
     border-color: var(--accent);
     color: var(--accent);
-    background: var(--accent-soft);
-    transform: translateY(-1px);
+    background: transparent;
 }
 
 /* ================================================
@@ -385,18 +320,17 @@ body {
     background: var(--bg-card);
     border: 1px solid var(--border);
     text-align: center;
-    transition: border-color var(--transition), transform var(--transition);
+    transition: border-color var(--transition);
 }
 
 .about-stat:hover {
-    border-color: var(--border-accent);
-    transform: translateY(-2px);
+    border-color: var(--border-hover);
 }
 
 .about-stat .stat-number {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--text);
     line-height: 1;
 }
 
@@ -416,7 +350,7 @@ body {
     padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition), opacity 0.5s ease;
+    transition: border-color var(--transition), opacity 0.5s ease, transform 0.5s ease;
     opacity: 0;
     transform: translateY(20px);
     position: relative;
@@ -428,9 +362,7 @@ body {
 }
 
 .project-card:hover {
-    border-color: var(--border-accent);
-    box-shadow: var(--shadow);
-    transform: translateY(-3px);
+    border-color: var(--border-hover);
 }
 
 .project-card h3 {
@@ -463,19 +395,18 @@ body {
 }
 
 .project-link {
-    color: var(--accent);
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.84rem;
     font-weight: 500;
-    transition: gap var(--transition), color var(--transition);
+    transition: color var(--transition);
     display: inline-flex;
     align-items: center;
     gap: 4px;
 }
 
 .project-link:hover {
-    gap: 8px;
-    color: var(--accent-hover);
+    color: var(--text);
 }
 
 /* ================================================
@@ -493,7 +424,7 @@ body {
     border-radius: var(--radius);
     padding: 1.75rem 1.25rem;
     text-align: center;
-    transition: border-color var(--transition), transform var(--transition), opacity 0.5s ease;
+    transition: border-color var(--transition), opacity 0.5s ease, transform 0.5s ease;
     opacity: 0;
     transform: translateY(15px);
 }
@@ -504,8 +435,7 @@ body {
 }
 
 .skill-card:hover {
-    border-color: var(--skill-color, var(--accent));
-    transform: translateY(-2px);
+    border-color: var(--border-hover);
 }
 
 .skill-icon-wrap {
@@ -553,7 +483,7 @@ body {
 
 .form-control:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
+    box-shadow: none;
     background: var(--bg-elevated);
     color: var(--text);
 }
@@ -567,14 +497,14 @@ body {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     font-size: 1.1rem;
-    border: 1px solid var(--border-accent);
+    border: 1px solid var(--border);
 }
 
 .contact-info {
@@ -600,7 +530,7 @@ body {
 }
 
 .contact-link:hover {
-    color: var(--accent) !important;
+    color: var(--text-secondary) !important;
 }
 
 .contact-label {
@@ -660,9 +590,8 @@ footer .text-muted {
 }
 
 .footer-link:hover {
-    border-color: var(--border-accent);
-    color: var(--accent);
-    background: var(--accent-soft);
+    border-color: var(--border-hover);
+    color: var(--text);
 }
 
 /* ================================================

@@ -23,7 +23,6 @@
 <body x-data="portfolio()" x-init="init()">
 
     <div class="bg-grid" aria-hidden="true"></div>
-    <div class="bg-orbs" aria-hidden="true"></div>
 
     <nav class="navbar navbar-expand-lg fixed-top" :class="{ 'navbar-scrolled': scrolled }">
         <div class="container">
@@ -52,7 +51,7 @@
         </div>
     </nav>
 
-    <header class="hero-section d-flex align-items-center pattern-dots">
+    <header class="hero-section d-flex align-items-center">
         <div class="container text-center">
             <div x-show="loaded" x-transition:enter="transition-fade" class="hero-content">
                 <span class="hero-tag mb-3">// creative developer</span>
@@ -116,7 +115,7 @@
             </div>
         </section>
 
-        <section id="projects" class="py-5 my-5 position-relative pattern-grid" style="z-index: 1">
+        <section id="projects" class="py-5 my-5 position-relative" style="z-index: 1">
             <div class="container">
                 <h2 class="section-title fw-bold mb-2">Projecten</h2>
                 <div class="divider mb-2"></div>
