@@ -10,6 +10,7 @@ import FooterSection from '../components/FooterSection.vue'
 </script>
 
 <template>
+  <div class="bg-dots" aria-hidden="true" />
   <NavBar />
   <HeroSection />
   <main class="relative z-[1]">

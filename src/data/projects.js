@@ -1,19 +1,22 @@
+import themeparkImg from '../assets/Images/BuildAThemepark.png'
+
 export const projects = [
   {
     title: 'Build a Theme Park',
     description:
-      'Een populaire Roblox game waar spelers hun eigen themapark kunnen bouwen en beheren. Gebouwd met Luau scripting en custom UI systemen.',
+      'Populaire Roblox game waar spelers hun eigen themapark bouwen en beheren. Custom UI systemen en game mechanics gebouwd met Luau.',
     badge: 'Roblox',
     badgeColor: '#e74c3c',
     stat: '900k+ bezoeken',
     github: null,
     featured: true,
     tech: ['Luau', 'Roblox Studio'],
+    image: themeparkImg,
   },
   {
     title: 'MantelZicht',
     description:
-      'Financieel overzicht voor mantelzorgers. Een PHP webapplicatie die helpt bij het beheren van financien.',
+      'Financieel overzicht voor mantelzorgers. PHP webapplicatie voor het beheren van financien.',
     badge: 'PHP',
     badgeColor: '#777bb4',
     stat: null,
@@ -33,7 +36,7 @@ export const projects = [
   {
     title: 'Horror Game',
     description:
-      'Een Roblox horror game, momenteel in actieve ontwikkeling met Luau scripting.',
+      'Roblox horror game in actieve ontwikkeling met Luau scripting en sfeervolle omgevingen.',
     badge: 'In ontwikkeling',
     badgeColor: null,
     stat: null,
@@ -43,7 +46,7 @@ export const projects = [
   {
     title: 'Clash Of Vikings',
     description:
-      'Een Roblox game met Viking-thema, momenteel in actieve ontwikkeling.',
+      'Roblox game met Viking-thema, momenteel in actieve ontwikkeling.',
     badge: 'In ontwikkeling',
     badgeColor: null,
     stat: null,

@@ -11,13 +11,14 @@ const { el, isVisible } = useIntersection()
     <div class="w-8 h-[2px] rounded-sm mb-4 bg-[var(--color-accent)]" />
 
     <p class="text-sm sm:text-base leading-relaxed mb-3 text-[var(--c-text-secondary)]">
-      Ik ben Karsten Lindenburg, 18 jaar oud en studeer Creative Software Development
-      aan het Grafisch Lyceum Rotterdam. Ik ben gepassioneerd over het ontwikkelen van
-      games en applicaties, met een focus op gebruikerservaring en functionele design.
+      Ik ben <span class="text-[var(--color-accent)] font-semibold">Karsten Lindenburg</span>,
+      18 jaar en studeer Creative Software Development aan het
+      Grafisch Lyceum Rotterdam. Ik bouw games en applicaties met een
+      focus op goede gebruikerservaring en functioneel design.
     </p>
     <p class="text-sm sm:text-base leading-relaxed mb-6 text-[var(--c-text-secondary)]">
-      Mijn interesse ligt vooral in game development en het creeren van interactieve
-      ervaringen die mensen verbinden en vermaken.
+      Mijn focus ligt op <span class="text-[var(--color-accent)] font-semibold">game development</span>
+      en het maken van interactieve ervaringen die mensen verbinden.
     </p>
 
     <div class="flex gap-3 flex-wrap">
@@ -25,7 +26,7 @@ const { el, isVisible } = useIntersection()
         href="https://github.com/Karsten0701"
         target="_blank"
         rel="noopener"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--c-text)] text-[var(--c-bg)] no-underline transition-opacity duration-200 hover:opacity-80"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[var(--color-accent)] text-[#1c1917] no-underline transition-all duration-200 hover:bg-[var(--color-accent-hover)]"
       >
         <Github :size="14" />
         Personal GitHub
@@ -35,7 +36,7 @@ const { el, isVisible } = useIntersection()
         href="https://github.com/Karsten07011"
         target="_blank"
         rel="noopener"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium border border-[var(--c-border)] text-[var(--c-text)] no-underline transition-all duration-200 hover:border-[var(--c-border-hover)]"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium border border-[var(--c-border)] text-[var(--c-text)] no-underline transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
       >
         <Github :size="14" />
         School GitHub

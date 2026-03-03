@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useTheme } from '../composables/useTheme'
 import { useScroll } from '../composables/useScroll'
 import { Github, Sun, Moon, Menu, X } from 'lucide-vue-next'
@@ -7,6 +7,7 @@ import { Github, Sun, Moon, Menu, X } from 'lucide-vue-next'
 const { isDark, toggle } = useTheme()
 const { scrolled } = useScroll()
 const mobileOpen = ref(false)
+const activeSection = ref('')
 
 const navLinks = [
   { label: 'Projecten', href: '#projects' },
@@ -24,11 +25,29 @@ function scrollToTop() {
   mobileOpen.value = false
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+function updateActiveSection() {
+  const sections = ['contact', 'skills', 'about', 'projects']
+  for (const id of sections) {
+    const el = document.getElementById(id)
+    if (el) {
+      const rect = el.getBoundingClientRect()
+      if (rect.top <= 120) {
+        activeSection.value = `#${id}`
+        return
+      }
+    }
+  }
+  activeSection.value = ''
+}
+
+onMounted(() => window.addEventListener('scroll', updateActiveSection, { passive: true }))
+onUnmounted(() => window.removeEventListener('scroll', updateActiveSection))
 </script>
 
 <template>
   <nav
-    class="fixed top-0 inset-x-0 z-50 backdrop-blur-md transition-[border-color,background] duration-300"
+    class="fixed top-0 inset-x-0 z-50 backdrop-blur-md transition-all duration-300"
     :class="scrolled ? 'border-b border-[var(--c-border)]' : 'border-b border-transparent'"
     :style="{ background: 'var(--c-nav-bg)' }"
   >
@@ -41,12 +60,16 @@ function scrollToTop() {
         KL<span class="text-[var(--color-accent)]">.</span>
       </a>
 
-      <div class="hidden md:flex items-center gap-1">
+      <div class="hidden md:flex items-center gap-0.5">
         <a
           v-for="link in navLinks"
           :key="link.href"
           :href="link.href"
-          class="px-3 py-1.5 text-[13px] font-medium rounded-md text-[var(--c-text-secondary)] no-underline transition-colors duration-200 hover:text-[var(--c-text)]"
+          class="px-3 py-1.5 text-[13px] font-medium rounded-md no-underline transition-all duration-200"
+          :class="activeSection === link.href
+            ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
+            : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text)]'
+          "
           @click.prevent="scrollTo(link.href)"
         >
           {{ link.label }}
@@ -59,14 +82,14 @@ function scrollToTop() {
           target="_blank"
           rel="noopener"
           title="GitHub"
-          class="size-8 rounded-lg border border-[var(--c-border)] text-[var(--c-text-secondary)] no-underline inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--c-border-hover)] hover:text-[var(--c-text)]"
+          class="size-8 rounded-lg border border-[var(--c-border)] text-[var(--c-text-secondary)] no-underline inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
         >
           <Github :size="15" />
         </a>
 
         <button
           :title="isDark ? 'Light mode' : 'Dark mode'"
-          class="size-8 rounded-lg border border-[var(--c-border)] bg-transparent text-[var(--c-text-secondary)] cursor-pointer inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--c-border-hover)] hover:text-[var(--c-text)]"
+          class="size-8 rounded-lg border border-[var(--c-border)] bg-transparent text-[var(--c-text-secondary)] cursor-pointer inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
           @click="toggle"
         >
           <Moon v-if="!isDark" :size="15" />
@@ -101,7 +124,11 @@ function scrollToTop() {
           v-for="link in navLinks"
           :key="link.href"
           :href="link.href"
-          class="px-3 py-2.5 text-sm font-medium rounded-lg text-[var(--c-text-secondary)] no-underline transition-colors duration-200 hover:text-[var(--c-text)]"
+          class="px-3 py-2.5 text-sm font-medium rounded-lg no-underline transition-all duration-200"
+          :class="activeSection === link.href
+            ? 'text-[var(--color-accent)]'
+            : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text)]'
+          "
           @click.prevent="scrollTo(link.href)"
         >
           {{ link.label }}

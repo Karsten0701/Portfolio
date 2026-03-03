@@ -5,7 +5,7 @@ import { useIntersection } from '../composables/useIntersection'
 import { projects } from '../data/projects'
 import { skills, tools } from '../data/skills'
 
-const { commits, fetchCommits } = useGitHub()
+const { commits, contributionWeeks, totalContributions, fetchCommits } = useGitHub()
 const { el: rootEl, isVisible } = useIntersection()
 
 const terminalBody = ref(null)
@@ -28,6 +28,26 @@ function addLine(text, type = 'output') {
 
 function addPromptLine(text) {
   lines.value.push({ text, type: 'prompt', id: uid() })
+}
+
+function addContributionGraph() {
+  const weeks = contributionWeeks.value
+  if (!weeks.length) {
+    addLine('Geen contribution data beschikbaar.', 'error')
+    return
+  }
+
+  lines.value.push({
+    type: 'contribution-header',
+    text: `${totalContributions.value} contributions (recente activiteit)`,
+    id: uid(),
+  })
+
+  lines.value.push({
+    type: 'contribution-graph',
+    weeks: weeks.slice(-26),
+    id: uid(),
+  })
 }
 
 function scrollToBottom() {
@@ -55,25 +75,32 @@ async function typeCommand(text) {
   line.type = 'prompt'
 }
 
+function getContribColor(count) {
+  if (count === 0) return '#2d2d3f'
+  if (count <= 1) return '#0e4429'
+  if (count <= 3) return '#006d32'
+  if (count <= 5) return '#26a641'
+  return '#39d353'
+}
+
 function processCommand(cmd) {
   const trimmed = cmd.trim().toLowerCase()
-
   if (!trimmed) return
-
   addPromptLine(cmd)
 
   if (trimmed === 'help') {
     addLine('Beschikbare commando\'s:')
-    addLine('  whoami        Wie ik ben')
-    addLine('  git log       Laatste GitHub commits')
-    addLine('  ls projects   Mijn projecten')
-    addLine('  skills        Tech stack')
-    addLine('  contact       Contact info')
-    addLine('  clear         Terminal leegmaken')
+    addLine('  whoami          Over mij')
+    addLine('  git log         Laatste commits')
+    addLine('  contributions   GitHub activity graph')
+    addLine('  ls projects     Mijn projecten')
+    addLine('  skills          Tech stack')
+    addLine('  contact         Contact info')
+    addLine('  clear           Terminal leegmaken')
   } else if (trimmed === 'whoami') {
     addLine('Karsten Lindenburg')
-    addLine('Creative Software Development @ Grafisch Lyceum Rotterdam')
-    addLine('Full-stack developer & game creator')
+    addLine('Creative Software Development @ GLR')
+    addLine('Developer & game creator')
     addLine('github.com/Karsten0701')
   } else if (trimmed === 'git log' || trimmed.startsWith('git log ')) {
     if (commits.value.length > 0) {
@@ -86,8 +113,10 @@ function processCommand(cmd) {
         })
       }
     } else {
-      addLine('Geen commits gevonden. Probeer later opnieuw.', 'error')
+      addLine('Geen commits gevonden.', 'error')
     }
+  } else if (trimmed === 'contributions' || trimmed === 'gh contributions') {
+    addContributionGraph()
   } else if (trimmed === 'ls projects' || trimmed === 'ls') {
     for (const p of projects) {
       const extra = p.stat ? `  (${p.stat})` : ''
@@ -112,7 +141,7 @@ function processCommand(cmd) {
     return
   } else {
     addLine(`zsh: command not found: ${cmd.trim()}`, 'error')
-    addLine('Typ "help" voor beschikbare commando\'s.')
+    addLine('Typ "help" voor commando\'s.')
   }
 
   addLine('')
@@ -137,6 +166,12 @@ async function boot() {
   await fetchCommits()
   await sleep(300)
 
+  await typeCommand('contributions')
+  await sleep(200)
+  addContributionGraph()
+  addLine('')
+  await sleep(400)
+
   await typeCommand('git log --oneline -5')
   await sleep(200)
 
@@ -154,13 +189,6 @@ async function boot() {
   }
 
   addLine('')
-  await sleep(200)
-
-  await typeCommand('echo "Typ help voor commando\'s"')
-  await sleep(100)
-  addLine('Typ help voor commando\'s')
-  addLine('')
-
   ready.value = true
   scrollToBottom()
   nextTick(() => focusInput())
@@ -198,28 +226,57 @@ watch(lines, scrollToBottom, { deep: true })
 
       <div
         ref="terminalBody"
-        class="bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed max-h-[340px] overflow-y-auto cursor-text min-h-[240px]"
+        class="bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed max-h-[380px] overflow-y-auto cursor-text min-h-[260px]"
       >
-        <div v-for="line in lines" :key="line.id" class="whitespace-pre-wrap">
+        <div v-for="line in lines" :key="line.id">
           <template v-if="line.type === 'prompt' || line.type === 'typing'">
-            <span class="text-[#a6e3a1]">$ </span>
-            <span class="text-[#cdd6f4]">{{ line.text }}</span>
-            <span
-              v-if="line.type === 'typing'"
-              class="inline-block w-[7px] h-[14px] bg-[#cdd6f4] ml-px align-middle"
-              :class="cursorBlink ? 'opacity-100' : 'opacity-0'"
-            />
+            <div class="whitespace-pre-wrap">
+              <span class="text-[#a6e3a1]">$ </span>
+              <span class="text-[#cdd6f4]">{{ line.text }}</span>
+              <span
+                v-if="line.type === 'typing'"
+                class="inline-block w-[7px] h-[14px] bg-[#cdd6f4] ml-px align-middle"
+                :class="cursorBlink ? 'opacity-100' : 'opacity-0'"
+              />
+            </div>
           </template>
+
           <template v-else-if="line.type === 'git-log'">
-            <span class="text-[#f9e2af]">{{ line.text.substring(0, 7) }}</span>
-            <span class="text-[#cdd6f4]"> {{ line.text.substring(7) }}</span>
-            <span v-if="line.repo" class="text-[#6c7086]"> ({{ line.repo }})</span>
+            <div class="whitespace-pre-wrap">
+              <span class="text-[#f9e2af]">{{ line.text.substring(0, 7) }}</span>
+              <span class="text-[#cdd6f4]"> {{ line.text.substring(7) }}</span>
+              <span v-if="line.repo" class="text-[#6c7086]"> ({{ line.repo }})</span>
+            </div>
           </template>
+
+          <template v-else-if="line.type === 'contribution-header'">
+            <div class="text-[#a6e3a1] text-xs mt-1 mb-1.5">{{ line.text }}</div>
+          </template>
+
+          <template v-else-if="line.type === 'contribution-graph'">
+            <div class="flex gap-[3px] overflow-x-auto pb-1 mb-1">
+              <div v-for="(week, wi) in line.weeks" :key="wi" class="flex flex-col gap-[3px]">
+                <div
+                  v-for="(day, di) in week"
+                  :key="di"
+                  class="size-[9px] rounded-[2px]"
+                  :style="{ background: getContribColor(day.count) }"
+                  :title="day.date + ': ' + day.count + ' contributions'"
+                />
+              </div>
+            </div>
+          </template>
+
           <template v-else-if="line.type === 'error'">
-            <span class="text-[#f38ba8]">{{ line.text }}</span>
+            <div class="whitespace-pre-wrap">
+              <span class="text-[#f38ba8]">{{ line.text }}</span>
+            </div>
           </template>
+
           <template v-else>
-            <span class="text-[#bac2de]">{{ line.text }}</span>
+            <div class="whitespace-pre-wrap">
+              <span class="text-[#bac2de]">{{ line.text }}</span>
+            </div>
           </template>
         </div>
 
@@ -247,7 +304,7 @@ watch(lines, scrollToBottom, { deep: true })
       </div>
     </div>
     <p class="text-xs text-[var(--c-text-muted)] mt-2">
-      Interactieve terminal — typ <span class="font-mono text-[var(--c-text-secondary)]">help</span> voor commando's
+      Interactieve terminal <span class="text-[var(--c-text-secondary)] font-mono">help</span> voor commando's
     </p>
   </div>
 </template>

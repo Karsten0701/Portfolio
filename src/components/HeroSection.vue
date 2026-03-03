@@ -2,9 +2,9 @@
 import { ArrowDown, Github } from 'lucide-vue-next'
 
 const stats = [
-  { number: '900k+', label: 'Game Bezoeken' },
-  { number: '5+', label: 'Projecten' },
-  { number: '6', label: 'Programmeertalen' },
+  { number: '900k+', label: 'Game Bezoeken', highlight: true },
+  { number: '5+', label: 'Projecten', highlight: false },
+  { number: '6', label: 'Programmeertalen', highlight: false },
 ]
 
 function scrollTo(id) {
@@ -23,12 +23,13 @@ function scrollTo(id) {
           Karsten<br>Lindenburg
         </h1>
         <p class="text-base sm:text-lg leading-relaxed mb-6 text-[var(--c-text-secondary)] max-w-lg">
-          Developer en game creator. Ik bouw interactieve ervaringen
-          van Roblox games met 900k+ bezoeken tot full-stack webapplicaties.
+          Developer en game creator. Ik bouw interactieve ervaringen,
+          van Roblox games met <span class="text-[var(--color-accent)] font-semibold">900k+ bezoeken</span>
+          tot full-stack webapplicaties.
         </p>
         <div class="flex items-center gap-3 flex-wrap mb-10">
           <button
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--c-text)] text-[var(--c-bg)] cursor-pointer transition-all duration-200 hover:opacity-80"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--color-accent)] text-[#1c1917] cursor-pointer transition-all duration-200 hover:bg-[var(--color-accent-hover)]"
             @click="scrollTo('#projects')"
           >
             Bekijk Projecten
@@ -38,7 +39,7 @@ function scrollTo(id) {
             href="https://github.com/Karsten0701"
             target="_blank"
             rel="noopener"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border border-[var(--c-border)] text-[var(--c-text)] no-underline transition-all duration-200 hover:border-[var(--c-border-hover)]"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border border-[var(--c-border)] text-[var(--c-text)] no-underline transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
           >
             <Github :size="16" />
             GitHub
@@ -48,7 +49,12 @@ function scrollTo(id) {
 
       <div class="flex flex-wrap gap-6 sm:gap-10">
         <div v-for="stat in stats" :key="stat.label">
-          <div class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--c-text)]">{{ stat.number }}</div>
+          <div
+            class="text-2xl sm:text-3xl font-bold tracking-tight"
+            :class="stat.highlight ? 'text-[var(--color-accent)]' : 'text-[var(--c-text)]'"
+          >
+            {{ stat.number }}
+          </div>
           <div class="text-xs sm:text-sm mt-0.5 text-[var(--c-text-muted)]">{{ stat.label }}</div>
         </div>
       </div>
