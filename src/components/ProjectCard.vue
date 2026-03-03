@@ -16,13 +16,6 @@ const { el, isVisible } = useIntersection()
     class="fade-in group rounded-xl border border-[var(--c-border)] bg-[var(--c-bg-card)] transition-all duration-200 hover:border-[var(--c-border-hover)] overflow-hidden relative"
     :class="{ visible: isVisible }"
   >
-    <img
-      v-if="featured && project.image"
-      :src="project.image"
-      :alt="project.title"
-      class="absolute inset-0 w-full h-full object-cover opacity-[0.08] group-hover:opacity-[0.12] transition-opacity duration-300 pointer-events-none"
-    >
-
     <div
       class="relative z-[1]"
       :class="featured ? 'p-6 sm:p-8' : 'p-5 sm:p-6'"

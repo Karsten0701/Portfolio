@@ -1,5 +1,3 @@
-import themeparkImg from '../assets/Images/BuildAThemepark.png'
-
 export const projects = [
   {
     title: 'Build a Theme Park',
@@ -11,7 +9,6 @@ export const projects = [
     github: null,
     featured: true,
     tech: ['Luau', 'Roblox Studio'],
-    image: themeparkImg,
   },
   {
     title: 'MantelZicht',
