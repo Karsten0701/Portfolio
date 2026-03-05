@@ -236,12 +236,12 @@ watch(lines, scrollToBottom, { deep: true })
           </template>
 
           <template v-else-if="line.type === 'contribution-graph'">
-            <div class="flex gap-[3px] overflow-hidden pb-1 mb-1">
-              <div v-for="(week, wi) in line.weeks" :key="wi" class="flex flex-col gap-[3px]">
+            <div class="flex gap-[1.5px] pb-1 mb-1">
+              <div v-for="(week, wi) in line.weeks" :key="wi" class="flex flex-col gap-[1.5px]">
                 <div
                   v-for="(day, di) in week"
                   :key="di"
-                  class="size-[9px] rounded-[2px]"
+                  class="size-[5px] rounded-[1px]"
                   :style="{ background: getContribColor(day.count) }"
                   :title="day.date + ': ' + day.count + ' contributions'"
                 />

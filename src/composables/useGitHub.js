@@ -1,21 +1,18 @@
 import { ref } from 'vue'
 
+const ACCOUNTS = ['Karsten0701', 'Karsten07011']
+
 const commits = ref([])
 const contributionWeeks = ref([])
 const totalContributions = ref(0)
 const loaded = ref(false)
 const error = ref(false)
 
-function buildFullYearGrid(contributions) {
+function buildFullYearGrid(dayMap) {
   const now = new Date()
   const oneDay = 86400000
   const startDate = new Date(now.getTime() - 52 * 7 * oneDay)
   startDate.setDate(startDate.getDate() - startDate.getDay())
-
-  const dayMap = {}
-  for (const entry of contributions) {
-    dayMap[entry.date] = entry.count
-  }
 
   const weeks = []
   let total = 0
@@ -37,39 +34,25 @@ function buildFullYearGrid(contributions) {
   return { weeks, total }
 }
 
-function buildContributionGridFromEvents(events) {
-  const now = new Date()
-  const dayMap = {}
-
-  for (const event of events) {
-    if (event.type !== 'PushEvent') continue
-    const date = new Date(event.created_at)
-    const key = date.toISOString().slice(0, 10)
-    dayMap[key] = (dayMap[key] || 0) + (event.payload.commits?.length || 1)
+async function fetchContributionsForAccount(username) {
+  try {
+    const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.contributions || []
+  } catch {
+    return []
   }
+}
 
-  const weeks = []
-  const oneDay = 86400000
-  const startDate = new Date(now.getTime() - 52 * 7 * oneDay)
-  startDate.setDate(startDate.getDate() - startDate.getDay())
-
-  let total = 0
-  let currentWeek = []
-
-  for (let d = new Date(startDate); d <= now; d = new Date(d.getTime() + oneDay)) {
-    const key = d.toISOString().slice(0, 10)
-    const count = dayMap[key] || 0
-    total += count
-    currentWeek.push({ date: key, count, day: d.getDay() })
-
-    if (d.getDay() === 6 || d.getTime() >= now.getTime()) {
-      weeks.push([...currentWeek])
-      currentWeek = []
-    }
+async function fetchEventsForAccount(username) {
+  try {
+    const res = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100`)
+    if (!res.ok) return []
+    return await res.json()
+  } catch {
+    return []
   }
-
-  if (currentWeek.length) weeks.push(currentWeek)
-  return { weeks, total }
 }
 
 export function useGitHub() {
@@ -77,27 +60,42 @@ export function useGitHub() {
     if (loaded.value) return
 
     try {
-      const [contribRes, eventsRes] = await Promise.allSettled([
-        fetch('https://github-contributions-api.jogruber.de/v4/Karsten0701?y=last'),
-        fetch('https://api.github.com/users/Karsten0701/events/public?per_page=100'),
-      ])
+      const contribResults = await Promise.all(
+        ACCOUNTS.map(acc => fetchContributionsForAccount(acc))
+      )
 
-      if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
-        const data = await contribRes.value.json()
-        const { weeks, total } = buildFullYearGrid(data.contributions)
+      const dayMap = {}
+      for (const contributions of contribResults) {
+        for (const entry of contributions) {
+          dayMap[entry.date] = (dayMap[entry.date] || 0) + entry.count
+        }
+      }
+
+      if (Object.keys(dayMap).length > 0) {
+        const { weeks, total } = buildFullYearGrid(dayMap)
         contributionWeeks.value = weeks
         totalContributions.value = total
-      } else if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
-        const events = await eventsRes.value.json()
-        const { weeks, total } = buildContributionGridFromEvents(events)
+      } else {
+        const allEvents = await Promise.all(
+          ACCOUNTS.map(acc => fetchEventsForAccount(acc))
+        )
+        for (const events of allEvents) {
+          for (const event of events) {
+            if (event.type !== 'PushEvent') continue
+            const key = new Date(event.created_at).toISOString().slice(0, 10)
+            dayMap[key] = (dayMap[key] || 0) + (event.payload.commits?.length || 1)
+          }
+        }
+        const { weeks, total } = buildFullYearGrid(dayMap)
         contributionWeeks.value = weeks
         totalContributions.value = total
       }
 
-      if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
-        const events = await eventsRes.value.json()
-        const result = []
-
+      const allEvents = await Promise.all(
+        ACCOUNTS.map(acc => fetchEventsForAccount(acc))
+      )
+      const result = []
+      for (const events of allEvents) {
         for (const event of events) {
           if (event.type !== 'PushEvent') continue
           const repo = event.repo.name.split('/')[1]
@@ -110,9 +108,11 @@ export function useGitHub() {
             })
           }
         }
-
-        commits.value = result.slice(0, 20)
       }
+
+      commits.value = result
+        .sort((a, b) => b.date - a.date)
+        .slice(0, 20)
 
       loaded.value = true
     } catch {
