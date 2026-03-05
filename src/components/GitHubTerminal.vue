@@ -208,7 +208,7 @@ watch(lines, scrollToBottom, { deep: true })
 
       <div
         ref="terminalBody"
-        class="bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed cursor-text min-h-[260px] overflow-hidden"
+        class="terminal-scroll bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed cursor-text h-[300px] overflow-y-auto"
       >
         <div v-for="line in lines" :key="line.id">
           <template v-if="line.type === 'prompt' || line.type === 'typing'">
