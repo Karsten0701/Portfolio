@@ -42,12 +42,12 @@ const rest = computed(() => projects.filter(p => !p.featured))
       </div>
 
       <Transition
-        enter-from-class="opacity-0 translate-y-2"
-        enter-active-class="transition-all duration-300"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-active-class="transition-all duration-200 absolute inset-x-0"
-        leave-to-class="opacity-0 -translate-y-2"
+        enter-from-class="opacity-0"
+        enter-active-class="transition-opacity duration-200"
+        enter-to-class="opacity-100"
+        leave-from-class="opacity-100"
+        leave-active-class="transition-opacity duration-150"
+        leave-to-class="opacity-0"
         mode="out-in"
       >
         <div v-if="activeTab === 'personal'" key="personal">

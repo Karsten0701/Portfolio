@@ -208,7 +208,7 @@ watch(lines, scrollToBottom, { deep: true })
 
       <div
         ref="terminalBody"
-        class="bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed max-h-[380px] overflow-y-auto cursor-text min-h-[260px]"
+        class="bg-[#1e1e2e] p-4 font-mono text-sm leading-relaxed cursor-text min-h-[260px] overflow-hidden"
       >
         <div v-for="line in lines" :key="line.id">
           <template v-if="line.type === 'prompt' || line.type === 'typing'">
@@ -236,7 +236,7 @@ watch(lines, scrollToBottom, { deep: true })
           </template>
 
           <template v-else-if="line.type === 'contribution-graph'">
-            <div class="flex gap-[3px] overflow-x-auto pb-1 mb-1">
+            <div class="flex gap-[3px] overflow-hidden pb-1 mb-1">
               <div v-for="(week, wi) in line.weeks" :key="wi" class="flex flex-col gap-[3px]">
                 <div
                   v-for="(day, di) in week"
