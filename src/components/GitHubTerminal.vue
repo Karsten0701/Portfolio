@@ -39,13 +39,13 @@ function addContributionGraph() {
 
   lines.value.push({
     type: 'contribution-header',
-    text: `${totalContributions.value} contributions (recente activiteit)`,
+    text: `${totalContributions.value} contributions (afgelopen jaar)`,
     id: uid(),
   })
 
   lines.value.push({
     type: 'contribution-graph',
-    weeks: weeks.slice(-26),
+    weeks,
     id: uid(),
   })
 }
@@ -170,25 +170,7 @@ async function boot() {
   await sleep(200)
   addContributionGraph()
   addLine('')
-  await sleep(400)
 
-  await typeCommand('git log --oneline -5')
-  await sleep(200)
-
-  if (commits.value.length > 0) {
-    for (const c of commits.value.slice(0, 5)) {
-      lines.value.push({
-        text: `${c.sha} ${c.message}`,
-        type: 'git-log',
-        repo: c.repo,
-        id: uid(),
-      })
-    }
-  } else {
-    addLine('Geen recente commits gevonden.', 'error')
-  }
-
-  addLine('')
   ready.value = true
   scrollToBottom()
   nextTick(() => focusInput())

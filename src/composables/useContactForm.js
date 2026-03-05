@@ -1,5 +1,5 @@
 import { reactive, ref } from 'vue'
-import { saveMessage } from '../services/contactService'
+import { sendMessage } from '../services/contactService'
 
 export function useContactForm() {
   const form = reactive({
@@ -55,7 +55,7 @@ export function useContactForm() {
     sending.value = true
     status.value = null
 
-    const result = await saveMessage({
+    const result = await sendMessage({
       name: form.name,
       email: form.email,
       message: form.message,
@@ -65,7 +65,7 @@ export function useContactForm() {
 
     if (result.success) {
       status.value = 'success'
-      statusMessage.value = 'Bericht opgeslagen! Bedankt voor je bericht.'
+      statusMessage.value = 'Bericht verstuurd! Ik neem zo snel mogelijk contact op.'
       form.name = ''
       form.email = ''
       form.message = ''

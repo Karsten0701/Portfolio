@@ -6,7 +6,38 @@ const totalContributions = ref(0)
 const loaded = ref(false)
 const error = ref(false)
 
-function buildContributionGrid(events) {
+function buildFullYearGrid(contributions) {
+  const now = new Date()
+  const oneDay = 86400000
+  const startDate = new Date(now.getTime() - 52 * 7 * oneDay)
+  startDate.setDate(startDate.getDate() - startDate.getDay())
+
+  const dayMap = {}
+  for (const entry of contributions) {
+    dayMap[entry.date] = entry.count
+  }
+
+  const weeks = []
+  let total = 0
+  let currentWeek = []
+
+  for (let d = new Date(startDate); d <= now; d = new Date(d.getTime() + oneDay)) {
+    const key = d.toISOString().slice(0, 10)
+    const count = dayMap[key] || 0
+    total += count
+    currentWeek.push({ date: key, count, day: d.getDay() })
+
+    if (d.getDay() === 6 || d.getTime() >= now.getTime()) {
+      weeks.push([...currentWeek])
+      currentWeek = []
+    }
+  }
+
+  if (currentWeek.length) weeks.push(currentWeek)
+  return { weeks, total }
+}
+
+function buildContributionGridFromEvents(events) {
   const now = new Date()
   const dayMap = {}
 
@@ -46,32 +77,42 @@ export function useGitHub() {
     if (loaded.value) return
 
     try {
-      const res = await fetch(
-        'https://api.github.com/users/Karsten0701/events/public?per_page=100'
-      )
-      if (!res.ok) throw new Error('API error')
+      const [contribRes, eventsRes] = await Promise.allSettled([
+        fetch('https://github-contributions-api.jogruber.de/v4/Karsten0701?y=last'),
+        fetch('https://api.github.com/users/Karsten0701/events/public?per_page=100'),
+      ])
 
-      const events = await res.json()
-      const result = []
-
-      for (const event of events) {
-        if (event.type !== 'PushEvent') continue
-        const repo = event.repo.name.split('/')[1]
-        for (const commit of event.payload.commits || []) {
-          result.push({
-            sha: commit.sha.substring(0, 7),
-            message: commit.message.split('\n')[0].substring(0, 56),
-            repo,
-            date: new Date(event.created_at),
-          })
-        }
+      if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
+        const data = await contribRes.value.json()
+        const { weeks, total } = buildFullYearGrid(data.contributions)
+        contributionWeeks.value = weeks
+        totalContributions.value = total
+      } else if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
+        const events = await eventsRes.value.json()
+        const { weeks, total } = buildContributionGridFromEvents(events)
+        contributionWeeks.value = weeks
+        totalContributions.value = total
       }
 
-      commits.value = result.slice(0, 20)
+      if (eventsRes.status === 'fulfilled' && eventsRes.value.ok) {
+        const events = await eventsRes.value.json()
+        const result = []
 
-      const { weeks, total } = buildContributionGrid(events)
-      contributionWeeks.value = weeks
-      totalContributions.value = total
+        for (const event of events) {
+          if (event.type !== 'PushEvent') continue
+          const repo = event.repo.name.split('/')[1]
+          for (const commit of event.payload.commits || []) {
+            result.push({
+              sha: commit.sha.substring(0, 7),
+              message: commit.message.split('\n')[0].substring(0, 56),
+              repo,
+              date: new Date(event.created_at),
+            })
+          }
+        }
+
+        commits.value = result.slice(0, 20)
+      }
 
       loaded.value = true
     } catch {

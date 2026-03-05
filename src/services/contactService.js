@@ -1,20 +1,10 @@
-const STORAGE_KEY = 'portfolio_messages'
+const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
+const ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE' // Vervang met je Web3Forms access key — https://web3forms.com
+
 const RATE_KEY = 'portfolio_rate'
 const MAX_MESSAGES = 3
 const WINDOW_MS = 5 * 60 * 1000
 const COOLDOWN_MS = 30 * 1000
-
-function getMessages() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
-  } catch {
-    return []
-  }
-}
-
-function saveMessages(messages) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
-}
 
 function getRateData() {
   try {
@@ -64,27 +54,36 @@ function recordSubmission() {
   saveRateData(data)
 }
 
-export async function saveMessage({ name, email, message }) {
+export async function sendMessage({ name, email, message }) {
   const rateCheck = checkRateLimit()
   if (!rateCheck.allowed) {
     return { success: false, error: rateCheck.message }
   }
 
   try {
-    const messages = getMessages()
-
-    messages.push({
-      id: Date.now(),
-      name,
-      email,
-      message,
-      date: new Date().toISOString(),
+    const response = await fetch(WEB3FORMS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: ACCESS_KEY,
+        subject: `Portfolio bericht van ${name}`,
+        from_name: name,
+        reply_to: email,
+        name,
+        email,
+        message,
+      }),
     })
 
-    saveMessages(messages)
-    recordSubmission()
-    return { success: true }
+    const result = await response.json()
+
+    if (result.success) {
+      recordSubmission()
+      return { success: true }
+    }
+
+    return { success: false, error: 'Kon het bericht niet versturen. Probeer het later opnieuw.' }
   } catch {
-    return { success: false, error: 'Kon het bericht niet opslaan. Probeer het opnieuw.' }
+    return { success: false, error: 'Netwerkfout. Controleer je internetverbinding en probeer opnieuw.' }
   }
 }

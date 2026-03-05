@@ -3,7 +3,7 @@ import { ArrowDown, Github } from 'lucide-vue-next'
 
 const stats = [
   { number: '900k+', label: 'Game Bezoeken', highlight: true },
-  { number: '5+', label: 'Projecten', highlight: false },
+  { number: '10+', label: 'Projecten', highlight: false },
   { number: '6', label: 'Programmeertalen', highlight: false },
 ]
 
