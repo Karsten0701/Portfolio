@@ -1,139 +1,48 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import { useTheme } from '../composables/useTheme'
 import { useScroll } from '../composables/useScroll'
-import { Github, Sun, Moon, Menu, X } from 'lucide-vue-next'
+import { Github, Sun, Moon, Menu, X, ArrowUpRight } from 'lucide-vue-next'
 
 const { isDark, toggle } = useTheme()
 const { scrolled } = useScroll()
+const route = useRoute()
 const mobileOpen = ref(false)
-const activeSection = ref('')
-
 const navLinks = [
-  { label: 'Projecten', href: '#projects' },
-  { label: 'Over Mij', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Werk', to: '/projects' },
+  { label: 'Over mij', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
-
-function scrollTo(href) {
-  mobileOpen.value = false
-  document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-}
-
-function scrollToTop() {
-  mobileOpen.value = false
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-function updateActiveSection() {
-  const sections = ['contact', 'skills', 'about', 'projects']
-  for (const id of sections) {
-    const el = document.getElementById(id)
-    if (el) {
-      const rect = el.getBoundingClientRect()
-      if (rect.top <= 120) {
-        activeSection.value = `#${id}`
-        return
-      }
-    }
-  }
-  activeSection.value = ''
-}
-
-onMounted(() => window.addEventListener('scroll', updateActiveSection, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', updateActiveSection))
+function closeMenu() { mobileOpen.value = false }
+function onKeydown(event) { if (event.key === 'Escape') closeMenu() }
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 </script>
 
 <template>
-  <nav
-    class="fixed top-0 inset-x-0 z-50 backdrop-blur-md transition-all duration-300"
-    :class="scrolled ? 'border-b border-[var(--c-border)]' : 'border-b border-transparent'"
-    :style="{ background: 'var(--c-nav-bg)' }"
-  >
-    <div class="max-w-5xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-      <a
-        href="#"
-        class="text-lg font-extrabold tracking-widest text-[var(--c-text)] no-underline"
-        @click.prevent="scrollToTop"
-      >
-        KL<span class="text-[var(--color-accent)]">.</span>
-      </a>
-
-      <div class="hidden md:flex items-center gap-0.5">
-        <a
-          v-for="link in navLinks"
-          :key="link.href"
-          :href="link.href"
-          class="px-3 py-1.5 text-[13px] font-medium rounded-md no-underline transition-all duration-200"
-          :class="activeSection === link.href
-            ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
-            : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text)]'
-          "
-          @click.prevent="scrollTo(link.href)"
-        >
-          {{ link.label }}
-        </a>
-      </div>
-
-      <div class="flex items-center gap-1.5">
-        <a
-          href="https://github.com/Karsten0701"
-          target="_blank"
-          rel="noopener"
-          title="GitHub"
-          class="size-8 rounded-lg border border-[var(--c-border)] text-[var(--c-text-secondary)] no-underline inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-        >
-          <Github :size="15" />
-        </a>
-
-        <button
-          :title="isDark ? 'Light mode' : 'Dark mode'"
-          class="size-8 rounded-lg border border-[var(--c-border)] bg-transparent text-[var(--c-text-secondary)] cursor-pointer inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-          @click="toggle"
-        >
-          <Moon v-if="!isDark" :size="15" />
-          <Sun v-else :size="15" />
-        </button>
-
-        <button
-          class="md:hidden size-8 rounded-lg border border-[var(--c-border)] bg-transparent text-[var(--c-text)] cursor-pointer inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--c-border-hover)]"
-          aria-label="Menu"
-          @click="mobileOpen = !mobileOpen"
-        >
-          <X v-if="mobileOpen" :size="16" />
-          <Menu v-else :size="16" />
-        </button>
+  <header class="fixed inset-x-0 top-0 z-50 border-b transition-all duration-300" :class="scrolled ? 'border-[var(--c-border)]' : 'border-transparent'" :style="{ background: scrolled ? 'var(--c-nav-bg)' : 'transparent', backdropFilter: scrolled ? 'blur(16px)' : 'none' }">
+    <div class="page-wrap flex h-[72px] items-center justify-between">
+      <RouterLink to="/" class="text-[14px] font-semibold tracking-[-.03em] no-underline" @click="closeMenu">Karsten Lindenburg</RouterLink>
+      <nav class="hidden items-center gap-8 md:flex" aria-label="Hoofdnavigatie">
+        <RouterLink v-for="link in navLinks" :key="link.to" :to="link.to" class="text-[13px] no-underline transition-colors hover:text-[var(--c-text)]" :class="route.path.startsWith(link.to) ? 'text-[var(--c-text)]' : 'text-[var(--c-text-secondary)]'">{{ link.label }}</RouterLink>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="https://github.com/Karsten0701" target="_blank" rel="noopener noreferrer" aria-label="GitHub profiel" class="hidden size-9 items-center justify-center rounded-full border border-[var(--c-border)] sm:inline-flex"><Github :size="15" /></a>
+        <button class="size-9 rounded-full border border-[var(--c-border)] bg-transparent inline-flex items-center justify-center cursor-pointer" :aria-label="isDark ? 'Licht thema inschakelen' : 'Donker thema inschakelen'" @click="toggle"><Sun v-if="isDark" :size="15" /><Moon v-else :size="15" /></button>
+        <RouterLink to="/contact" class="hidden sm:inline-flex button-primary min-h-9 px-4 text-xs">Laten we praten <ArrowUpRight :size="14" /></RouterLink>
+        <button class="md:hidden size-9 rounded-full border border-[var(--c-border)] bg-transparent inline-flex items-center justify-center cursor-pointer" :aria-label="mobileOpen ? 'Menu sluiten' : 'Menu openen'" :aria-expanded="mobileOpen" @click="mobileOpen = !mobileOpen"><X v-if="mobileOpen" :size="17" /><Menu v-else :size="17" /></button>
       </div>
     </div>
-
-    <Transition
-      enter-from-class="opacity-0 -translate-y-2"
-      enter-active-class="transition-all duration-200"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-active-class="transition-all duration-200"
-      leave-to-class="opacity-0 -translate-y-2"
-    >
-      <div
-        v-if="mobileOpen"
-        class="md:hidden border-t border-[var(--c-border)] px-5 pb-4 pt-2 flex flex-col gap-0.5"
-        :style="{ background: 'var(--c-bg-surface)' }"
-      >
-        <a
-          v-for="link in navLinks"
-          :key="link.href"
-          :href="link.href"
-          class="px-3 py-2.5 text-sm font-medium rounded-lg no-underline transition-all duration-200"
-          :class="activeSection === link.href
-            ? 'text-[var(--color-accent)]'
-            : 'text-[var(--c-text-secondary)] hover:text-[var(--c-text)]'
-          "
-          @click.prevent="scrollTo(link.href)"
-        >
-          {{ link.label }}
-        </a>
-      </div>
+    <Transition name="menu">
+      <nav v-if="mobileOpen" class="absolute inset-x-0 top-full border-b border-[var(--c-border)] bg-[var(--c-bg)] px-5 pb-6 pt-2 md:hidden" aria-label="Mobiele navigatie">
+        <RouterLink v-for="link in navLinks" :key="link.to" :to="link.to" class="block border-b border-[var(--c-border)] py-4 text-2xl tracking-tight no-underline" @click="closeMenu">{{ link.label }}</RouterLink>
+        <a href="https://github.com/Karsten0701" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center gap-2 text-sm no-underline" @click="closeMenu"><Github :size="16" /> GitHub profiel <ArrowUpRight :size="13" /></a>
+      </nav>
     </Transition>
-  </nav>
+  </header>
 </template>
+
+<style scoped>
+.menu-enter-active,.menu-leave-active{transition:opacity .18s ease,transform .18s ease}.menu-enter-from,.menu-leave-to{opacity:0;transform:translateY(-8px)}
+</style>

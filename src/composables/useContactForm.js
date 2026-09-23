@@ -5,12 +5,14 @@ export function useContactForm() {
   const form = reactive({
     name: '',
     email: '',
+    subject: '',
     message: '',
   })
 
   const errors = reactive({
     name: '',
     email: '',
+    subject: '',
     message: '',
   })
 
@@ -21,6 +23,7 @@ export function useContactForm() {
   function clearErrors() {
     errors.name = ''
     errors.email = ''
+    errors.subject = ''
     errors.message = ''
   }
 
@@ -41,6 +44,11 @@ export function useContactForm() {
       valid = false
     }
 
+    if (!form.subject.trim()) {
+      errors.subject = 'Kies waar je bericht over gaat.'
+      valid = false
+    }
+
     if (!form.message.trim()) {
       errors.message = 'Bericht is verplicht.'
       valid = false
@@ -58,18 +66,24 @@ export function useContactForm() {
     const result = await sendMessage({
       name: form.name,
       email: form.email,
+      subject: form.subject,
       message: form.message,
     })
 
     sending.value = false
 
     if (result.success) {
-      status.value = 'success'
-      statusMessage.value = 'Bericht verstuurd! Ik neem zo snel mogelijk contact op.'
-      form.name = ''
-      form.email = ''
-      form.message = ''
-      clearErrors()
+      status.value = result.fallback ? 'fallback' : 'success'
+      statusMessage.value = result.fallback
+        ? 'Je e-mailprogramma is geopend. Verstuur het bericht daar om het naar mij te mailen.'
+        : 'Bericht verstuurd! Ik neem zo snel mogelijk contact op.'
+      if (!result.fallback) {
+        form.name = ''
+        form.email = ''
+        form.subject = ''
+        form.message = ''
+        clearErrors()
+      }
     } else {
       status.value = 'error'
       statusMessage.value = result.error

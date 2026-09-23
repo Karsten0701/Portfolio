@@ -1,51 +1,15 @@
 <script setup>
-import { Github, Mail, GraduationCap } from 'lucide-vue-next'
-import { socialLinks } from '../data/contact'
-
-const iconMap = {
-  github: Github,
-  envelope: Mail,
-  mortarboard: GraduationCap,
-}
+import { RouterLink } from 'vue-router'
+import { ArrowUpRight, Github, Mail } from 'lucide-vue-next'
 </script>
 
 <template>
-  <footer class="relative z-[1]">
-    <div class="relative" aria-hidden="true">
-      <svg
-        viewBox="0 0 1440 60"
-        preserveAspectRatio="none"
-        class="block w-full h-10 sm:h-14"
-        fill="none"
-      >
-        <path d="M0 0 Q720 60 1440 0 L1440 60 L0 60 Z" fill="var(--c-bg-alt)" />
-      </svg>
-    </div>
-
-    <div class="bg-[var(--c-bg-alt)] pb-8 pt-4 px-5 sm:px-8">
-      <div class="max-w-5xl mx-auto">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span class="text-lg font-extrabold tracking-widest text-[var(--c-text)]">
-            KL<span class="text-[var(--color-accent)]">.</span>
-          </span>
-
-          <div class="flex gap-1.5">
-            <a
-              v-for="link in socialLinks"
-              :key="link.title"
-              :href="link.href"
-              :target="link.href.startsWith('http') ? '_blank' : undefined"
-              :rel="link.href.startsWith('http') ? 'noopener' : undefined"
-              :title="link.title"
-              class="size-9 rounded-lg border border-[var(--c-border)] text-[var(--c-text-secondary)] no-underline inline-flex items-center justify-center transition-all duration-200 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-            >
-              <component :is="iconMap[link.icon] || Mail" :size="15" />
-            </a>
-          </div>
-
-          <p class="text-xs text-[var(--c-text-muted)]">&copy; 2026 Karsten Lindenburg</p>
-        </div>
-      </div>
+  <footer class="border-t border-[var(--c-border)] py-7">
+    <div class="page-wrap flex flex-col items-start justify-between gap-5 text-xs text-[var(--c-text-muted)] sm:flex-row sm:items-center">
+      <RouterLink to="/" class="font-medium text-[var(--c-text)] no-underline">Karsten Lindenburg<span class="ml-1 text-[var(--c-accent)]">.</span></RouterLink>
+      <p>Creative Software Development · Rotterdam</p>
+      <div class="flex items-center gap-4"><a href="https://github.com/Karsten0701" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="surface-link inline-flex items-center gap-1.5 no-underline"><Github :size="14" />GitHub<ArrowUpRight :size="11" /></a><RouterLink to="/contact" class="surface-link inline-flex items-center gap-1.5 no-underline"><Mail :size="14" />Contact</RouterLink></div>
+      <span>© {{ new Date().getFullYear() }} Karsten</span>
     </div>
   </footer>
 </template>

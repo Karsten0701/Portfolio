@@ -1,81 +1,23 @@
 <script setup>
-import { Send, Loader2 } from 'lucide-vue-next'
+import { Send, Loader2, Check } from 'lucide-vue-next'
 import { useContactForm } from '../composables/useContactForm'
 
 const { form, errors, sending, status, statusMessage, submit } = useContactForm()
 </script>
 
 <template>
-  <form @submit.prevent="submit" novalidate>
-    <div class="mb-4">
-      <label for="name" class="block text-sm font-medium mb-1.5 text-[var(--c-text-secondary)]">Naam</label>
-      <input
-        id="name"
-        v-model="form.name"
-        type="text"
-        placeholder="Je naam"
-        class="w-full rounded-lg px-4 py-2.5 text-sm border bg-[var(--c-bg-surface)] text-[var(--c-text)] placeholder-[var(--c-text-muted)] outline-none transition-colors duration-200 focus:border-[var(--color-accent)]"
-        :class="errors.name ? 'border-red-500 focus:border-red-500' : 'border-[var(--c-border)]'"
-        required
-        aria-required="true"
-      >
-      <p v-if="errors.name" class="text-xs mt-1 text-red-500">{{ errors.name }}</p>
+  <form class="space-y-5" @submit.prevent="submit" novalidate>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div><label for="name" class="mb-2 block text-xs text-[var(--c-text-secondary)]">Naam</label><input id="name" v-model="form.name" autocomplete="name" type="text" placeholder="Je naam" required :aria-invalid="!!errors.name" aria-describedby="name-error" class="contact-field" /><p v-if="errors.name" id="name-error" class="mt-1.5 text-xs text-red-500">{{ errors.name }}</p></div>
+      <div><label for="email" class="mb-2 block text-xs text-[var(--c-text-secondary)]">E-mailadres</label><input id="email" v-model="form.email" autocomplete="email" type="email" placeholder="je@email.com" required :aria-invalid="!!errors.email" aria-describedby="email-error" class="contact-field" /><p v-if="errors.email" id="email-error" class="mt-1.5 text-xs text-red-500">{{ errors.email }}</p></div>
     </div>
-
-    <div class="mb-4">
-      <label for="email" class="block text-sm font-medium mb-1.5 text-[var(--c-text-secondary)]">Email</label>
-      <input
-        id="email"
-        v-model="form.email"
-        type="email"
-        placeholder="je@email.com"
-        class="w-full rounded-lg px-4 py-2.5 text-sm border bg-[var(--c-bg-surface)] text-[var(--c-text)] placeholder-[var(--c-text-muted)] outline-none transition-colors duration-200 focus:border-[var(--color-accent)]"
-        :class="errors.email ? 'border-red-500 focus:border-red-500' : 'border-[var(--c-border)]'"
-        required
-        aria-required="true"
-      >
-      <p v-if="errors.email" class="text-xs mt-1 text-red-500">{{ errors.email }}</p>
-    </div>
-
-    <div class="mb-5">
-      <label for="message" class="block text-sm font-medium mb-1.5 text-[var(--c-text-secondary)]">Bericht</label>
-      <textarea
-        id="message"
-        v-model="form.message"
-        rows="4"
-        placeholder="Waar kan ik je mee helpen?"
-        class="w-full rounded-lg px-4 py-2.5 text-sm border bg-[var(--c-bg-surface)] text-[var(--c-text)] placeholder-[var(--c-text-muted)] outline-none transition-colors duration-200 resize-y focus:border-[var(--color-accent)]"
-        :class="errors.message ? 'border-red-500 focus:border-red-500' : 'border-[var(--c-border)]'"
-        required
-        aria-required="true"
-      />
-      <p v-if="errors.message" class="text-xs mt-1 text-red-500">{{ errors.message }}</p>
-    </div>
-
-    <button
-      type="submit"
-      :disabled="sending"
-      class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--c-text)] text-[var(--c-bg)] cursor-pointer transition-opacity duration-200 hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
-    >
-      <template v-if="!sending">
-        <Send :size="14" />
-        Verstuur
-      </template>
-      <template v-else>
-        <Loader2 :size="14" class="animate-spin" />
-        Verzenden...
-      </template>
-    </button>
-
-    <div
-      v-if="status"
-      class="mt-4 px-4 py-3 rounded-lg text-sm"
-      :class="status === 'success'
-        ? 'bg-green-500/10 border border-green-500/20 text-green-600'
-        : 'bg-red-500/10 border border-red-500/20 text-red-500'
-      "
-    >
-      {{ statusMessage }}
-    </div>
+    <div><label for="subject" class="mb-2 block text-xs text-[var(--c-text-secondary)]">Waar gaat je bericht over?</label><select id="subject" v-model="form.subject" required :aria-invalid="!!errors.subject" aria-describedby="subject-error" class="contact-field"><option value="" disabled>Kies een onderwerp</option><option>Een project</option><option>Samenwerken</option><option>Een vraag</option><option>Anders</option></select><p v-if="errors.subject" id="subject-error" class="mt-1.5 text-xs text-red-500">{{ errors.subject }}</p></div>
+    <div><label for="message" class="mb-2 block text-xs text-[var(--c-text-secondary)]">Bericht</label><textarea id="message" v-model="form.message" rows="5" placeholder="Vertel me waar je aan denkt…" required :aria-invalid="!!errors.message" aria-describedby="message-error" class="contact-field resize-y" /><p v-if="errors.message" id="message-error" class="mt-1.5 text-xs text-red-500">{{ errors.message }}</p></div>
+    <button type="submit" :disabled="sending" class="button-primary disabled:cursor-wait disabled:opacity-60"><Loader2 v-if="sending" :size="15" class="animate-spin" /><Check v-else-if="status === 'success'" :size="15" /><Send v-else :size="15" />{{ sending ? 'Versturen…' : 'Verstuur bericht' }}</button>
+    <p v-if="status" role="status" aria-live="polite" class="border-l-2 pl-3 text-sm leading-6" :class="status === 'error' ? 'border-red-500 text-red-500' : 'border-[var(--c-accent)] text-[var(--c-text-secondary)]'">{{ statusMessage }}</p>
   </form>
 </template>
+
+<style scoped>
+.contact-field{width:100%;min-height:48px;border:1px solid var(--c-border);border-radius:3px;background:var(--c-bg-card);padding:12px 13px;color:var(--c-text);font:inherit;font-size:13px;outline:none}.contact-field:focus{border-color:var(--c-text)}.contact-field::placeholder{color:var(--c-text-muted)}select.contact-field{color:var(--c-text-secondary)}
+</style>

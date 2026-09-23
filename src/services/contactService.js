@@ -1,5 +1,5 @@
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
-const ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE' // Vervang met je Web3Forms access key — https://web3forms.com
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
 
 const RATE_KEY = 'portfolio_rate'
 const MAX_MESSAGES = 3
@@ -15,7 +15,11 @@ function getRateData() {
 }
 
 function saveRateData(data) {
-  localStorage.setItem(RATE_KEY, JSON.stringify(data))
+  try {
+    localStorage.setItem(RATE_KEY, JSON.stringify(data))
+  } catch {
+    // Submission still succeeds if browser storage is unavailable.
+  }
 }
 
 export function checkRateLimit() {
@@ -54,7 +58,14 @@ function recordSubmission() {
   saveRateData(data)
 }
 
-export async function sendMessage({ name, email, message }) {
+export async function sendMessage({ name, email, subject, message }) {
+  if (!ACCESS_KEY) {
+    const body = [`Naam: ${name}`, `E-mail: ${email}`, '', message].join('\n')
+    const mailto = `mailto:Karstenlindenburg@gmail.com?subject=${encodeURIComponent(subject || `Portfolio bericht van ${name}`)}&body=${encodeURIComponent(body)}`
+    window.location.href = mailto
+    return { success: true, fallback: true }
+  }
+
   const rateCheck = checkRateLimit()
   if (!rateCheck.allowed) {
     return { success: false, error: rateCheck.message }
@@ -66,7 +77,7 @@ export async function sendMessage({ name, email, message }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         access_key: ACCESS_KEY,
-        subject: `Portfolio bericht van ${name}`,
+        subject: subject || `Portfolio bericht van ${name}`,
         from_name: name,
         reply_to: email,
         name,
