@@ -17,14 +17,12 @@ const { el: introEl, isVisible: introVisible } = useIntersection()
   <main>
     <section class="page-wrap grid min-h-[690px] items-center gap-10 pb-20 pt-32 md:grid-cols-[1.15fr_.85fr] md:pb-24 md:pt-36">
       <div class="max-w-[670px]">
-        <p class="eyebrow mb-7 flex items-center gap-3"><span class="inline-block size-[7px] rounded-full bg-[var(--c-accent)]" />Creative software developer · Rotterdam</p>
         <h1 class="display-title">Ik bouw digitale<br class="hidden sm:block"> producten, games<br class="hidden sm:block"> &amp; ervaringen.</h1>
         <p class="mt-7 max-w-[490px] text-base leading-7 text-[var(--c-text-secondary)] sm:text-lg sm:leading-8">Van complete webapplicaties tot Roblox-games en interactieve experimenten. Ik maak ideeën tastbaar met code, aandacht voor detail en gevoel voor gebruik.</p>
         <div class="mt-8 flex flex-wrap items-center gap-3">
           <RouterLink to="/projects" class="button-primary arrow-reveal">Bekijk mijn werk <ArrowDownRight :size="16" /></RouterLink>
           <RouterLink to="/contact" class="button-secondary">Neem contact op <ArrowUpRight :size="15" /></RouterLink>
         </div>
-        <div class="mt-14 flex items-center gap-4 text-xs text-[var(--c-text-muted)]"><span class="h-px w-10 bg-[var(--c-border-hover)]" />Opleiding Creative Software Development<br class="sm:hidden"> · Grafisch Lyceum Rotterdam</div>
       </div>
       <div class="relative mx-auto w-full max-w-[520px] md:mt-8">
         <div class="absolute -inset-5 -rotate-3 border border-[var(--c-border)]" aria-hidden="true" />

@@ -4,6 +4,7 @@ const ACCOUNTS = ['Karsten0701', 'Karsten07011']
 const contributionWeeks = ref([])
 const totalContributions = ref(0)
 const accounts = ref([])
+const accountContributionCounts = ref({})
 const recentCommits = ref([])
 const commitsLoading = ref(false)
 const commitsError = ref(false)
@@ -85,6 +86,10 @@ function fetchContributions() {
   request = Promise.allSettled(ACCOUNTS.map(fetchAccount)).then(results => {
     const successful = results.filter(result => result.status === 'fulfilled').map(result => result.value)
     accounts.value = successful.map(account => account.username)
+    accountContributionCounts.value = Object.fromEntries(successful.map(account => [
+      account.username,
+      Object.fromEntries(account.contributions.map(item => [item.date, item.count])),
+    ]))
     const dayMap = {}
     for (const account of successful) {
       for (const item of account.contributions) dayMap[item.date] = (dayMap[item.date] || 0) + item.count
@@ -117,5 +122,5 @@ export function useGitHub() {
     if (count <= 6) return 'color-mix(in srgb, var(--c-accent) 76%, var(--c-bg-alt))'
     return 'var(--c-accent)'
   }
-  return { contributionWeeks, totalContributions, accounts, recentCommits, commitsLoading, commitsError, loading, error, fetchContributions, fetchRecentCommits, contributionColor, monthLabels }
+  return { contributionWeeks, totalContributions, accounts, accountContributionCounts, recentCommits, commitsLoading, commitsError, loading, error, fetchContributions, fetchRecentCommits, contributionColor, monthLabels }
 }

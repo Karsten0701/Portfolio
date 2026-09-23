@@ -1,13 +1,19 @@
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Github, ArrowUpRight, RotateCw } from 'lucide-vue-next'
 import { useGitHub } from '../composables/useGitHub'
 
-const { contributionWeeks, totalContributions, accounts, recentCommits, commitsLoading, commitsError, loading, error, fetchContributions, fetchRecentCommits, contributionColor, monthLabels } = useGitHub()
+const { contributionWeeks, totalContributions, accounts, accountContributionCounts, recentCommits, commitsLoading, commitsError, loading, error, fetchContributions, fetchRecentCommits, contributionColor, monthLabels } = useGitHub()
 const profiles = ['Karsten0701', 'Karsten07011']
+const selectedDay = ref(null)
+const selectedBreakdown = computed(() => selectedDay.value
+  ? accounts.value.map(username => ({ username, count: accountContributionCounts.value[username]?.[selectedDay.value.date] || 0 }))
+  : [])
 onMounted(() => { fetchContributions(); fetchRecentCommits() })
 function readableCount(count) { return `${count} bijdrage${count === 1 ? '' : 'n'}` }
 function readableDate(date) { return new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short' }).format(new Date(date)) }
+function readableLongDate(date) { return new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${date}T00:00:00Z`)) }
+function toggleDay(day) { selectedDay.value = selectedDay.value?.date === day.date ? null : day }
 </script>
 
 <template>
@@ -21,7 +27,7 @@ function readableDate(date) { return new Intl.DateTimeFormat('nl-NL', { day: 'nu
       <button v-if="error" class="inline-flex items-center gap-2 self-start text-xs text-[var(--c-text-secondary)] bg-transparent border-0 cursor-pointer" @click="fetchContributions"><RotateCw :size="13" />{{ contributionWeeks.length ? 'Een profiel tijdelijk niet beschikbaar · opnieuw laden' : 'Laden opnieuw proberen' }}</button>
     </div>
     <div v-if="loading && !contributionWeeks.length" class="mt-7 h-[104px] animate-pulse rounded-sm bg-[var(--c-bg-alt)]" aria-label="Activiteit wordt geladen" />
-    <div v-else-if="contributionWeeks.length" class="mt-7 overflow-x-auto pb-2" tabindex="0" role="img" :aria-label="`${totalContributions} GitHub-bijdragen samen van de afgelopen 12 maanden. Scroll horizontaal om alle weken te bekijken.`">
+    <div v-else-if="contributionWeeks.length" class="mt-7 overflow-x-auto pb-2" tabindex="0" role="region" :aria-label="`GitHub-bijdragenkalender met ${totalContributions} bijdragen samen van de afgelopen 12 maanden. Scroll horizontaal om alle weken te bekijken.`">
       <div class="min-w-[710px]">
         <div class="mb-2 grid grid-cols-[24px_1fr] text-[10px] text-[var(--c-text-muted)]">
           <span />
@@ -31,14 +37,18 @@ function readableDate(date) { return new Intl.DateTimeFormat('nl-NL', { day: 'nu
           <div class="flex flex-col justify-between py-[2px] text-[9px] text-[var(--c-text-muted)]"><span>ma</span><span>wo</span><span>vr</span></div>
           <div class="flex gap-[3px]">
             <div v-for="(week, wi) in contributionWeeks" :key="wi" class="grid flex-1 grid-rows-7 gap-[3px]">
-              <span v-for="(day, di) in week" :key="di" class="aspect-square min-w-[7px] rounded-[2px]" :style="{ background: contributionColor(day.count) }" :title="`${day.date}: ${readableCount(day.count)}`" :aria-label="`${day.date}: ${readableCount(day.count)}`" />
+              <button v-for="(day, di) in week" :key="di" type="button" class="contribution-day aspect-square min-w-[7px] cursor-pointer rounded-[2px] border-0 p-0" :class="{ 'is-selected': selectedDay?.date === day.date }" :style="{ background: contributionColor(day.count) }" :title="`${day.date}: ${readableCount(day.count)} · klik voor details`" :aria-label="`${readableLongDate(day.date)}: ${readableCount(day.count)}. Klik voor uitsplitsing per profiel.`" :aria-pressed="selectedDay?.date === day.date" @click="toggleDay(day)" />
               <span v-for="empty in 7 - week.length" :key="`empty-${empty}`" />
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-else-if="!loading" class="mt-6 rounded-sm bg-[var(--c-bg-alt)] px-4 py-5 text-sm text-[var(--c-text-secondary)]">GitHub-activiteit is op dit moment niet beschikbaar. Bekijk mijn profiel voor de meest recente activiteit.</div>
+    <div v-if="selectedDay" class="mt-3 flex flex-col gap-3 rounded-sm bg-[var(--c-bg-alt)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between" role="status" aria-live="polite">
+      <div><p class="text-xs font-medium capitalize">{{ readableLongDate(selectedDay.date) }}</p><p class="mt-1 text-xs text-[var(--c-text-secondary)]">{{ selectedDay.count }} {{ selectedDay.count === 1 ? 'bijdrage totaal' : 'bijdragen totaal' }}</p></div>
+      <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs"><a v-for="profile in selectedBreakdown" :key="profile.username" :href="`https://github.com/${profile.username}`" target="_blank" rel="noopener noreferrer" class="text-[var(--c-text-secondary)] hover:text-[var(--c-text)]">{{ profile.username }}: {{ profile.count }} <ArrowUpRight :size="11" class="inline" /></a></div>
+    </div>
+    <div v-if="!loading && !contributionWeeks.length" class="mt-6 rounded-sm bg-[var(--c-bg-alt)] px-4 py-5 text-sm text-[var(--c-text-secondary)]">GitHub-activiteit is op dit moment niet beschikbaar. Bekijk mijn profiel voor de meest recente activiteit.</div>
     <div class="mt-5 border-t border-[var(--c-border)] pt-4">
       <h3 class="mb-3 text-xs font-medium text-[var(--c-text-secondary)]">Recente openbare commits</h3>
       <div v-if="recentCommits.length" class="divide-y divide-[var(--c-border)]">
@@ -59,3 +69,8 @@ function readableDate(date) { return new Intl.DateTimeFormat('nl-NL', { day: 'nu
     <p v-if="accounts.length" class="sr-only">Activiteit geladen voor {{ accounts.join(' en ') }}.</p>
   </section>
 </template>
+
+<style scoped>
+.contribution-day{position:relative;transition:transform .12s ease,box-shadow .12s ease}.contribution-day:hover{z-index:1;transform:scale(1.35);box-shadow:0 0 0 2px var(--c-bg-card)}.contribution-day.is-selected{box-shadow:0 0 0 2px var(--c-text)}
+@media(prefers-reduced-motion:reduce){.contribution-day{transition:none}.contribution-day:hover{transform:none}}
+</style>
